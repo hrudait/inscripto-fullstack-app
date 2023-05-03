@@ -3,7 +3,7 @@ function App() {
   const [backendData, setBackendData] = useState([{}])
 
   useEffect(()=>{
-    fetch("http://localhost:5000/").then(
+    fetch("https://backend-kn3o.onrender.com/").then(
       response => response.json()
     ).then(
       data=>{
