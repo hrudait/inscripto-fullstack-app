@@ -13,9 +13,12 @@ function App() {
   },[])
   return (
     <div className="App">
-      <h1>
-        {backendData.bruh}
-      </h1>
+      {(typeof backendData.bruh === 'undefined') ? (
+        <h1>Loading...</h1>
+      ):(
+        <h1>{backendData.bruh}</h1>
+      )
+    }
     </div>
   );
 }
