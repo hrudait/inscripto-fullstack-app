@@ -3,6 +3,10 @@ const app = express();
 const cors = require('cors')
 const port = process.env.PORT || 5000
 app.listen(port)
+let corsOptions = {
+  origin: 'https://front-qqki.onrender.com/',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
@@ -12,7 +16,7 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     next();
   });
-app.use(cors())
+app.use(cors(corsOptions))
 app.get('/', (req,res) =>{
     res.json({bruh:"hello"})
 })
