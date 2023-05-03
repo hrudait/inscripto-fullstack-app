@@ -4,7 +4,7 @@ const cors = require('cors')
 const port = process.env.PORT || 5000
 app.listen(port)
 let corsOptions = {
-  origin: 'https://front-qqki.onrender.com/',
+  origin: 'https://front-qqki.onrender.com',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use((req, res, next) => {
