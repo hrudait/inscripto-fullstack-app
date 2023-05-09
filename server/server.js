@@ -16,7 +16,11 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     next();
   });
-app.use(cors(corsOptions))
+app.use(cors())
 app.get('/', (req,res) =>{
     res.json({bruh:"hello"})
+})
+
+app.get('/login', (req,res)=>{
+  
 })

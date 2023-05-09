@@ -1,26 +1,26 @@
 import { useState,useEffect } from "react"
-function App() {
-  const [backendData, setBackendData] = useState([{}])
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login"
+import Home from "./pages/Home"
 
-  useEffect(()=>{
-    fetch("https://backend-kn3o.onrender.com/").then(
-      response => response.json()
-    ).then(
-      data=>{
-        setBackendData(data)
-      }
-    )
-  },[])
-  return (
-    <div className="App">
-      {(typeof backendData.bruh === 'undefined') ? (
-        <h1>Loading...</h1>
-      ):(
-        <h1>{backendData.bruh}</h1>
-      )
-    }
-    </div>
-  );
+function App() {
+  // const [backendData, setBackendData] = useState([{}])
+
+  // useEffect(()=>{
+  //   //https://backend-kn3o.onrender.com/
+  //   fetch("http://localhost:5000/").then(
+  //     response => response.json()
+  //   ).then(
+  //     data=>{
+  //       setBackendData(data)
+  //     }
+  //   )
+  // },[])
+  return <Routes>
+    <Route path="/" element={<Home />}/>
+    <Route path="/login" element ={<Login />} />
+    <Route path="*" element ={<h1>DNE</h1>} />
+  </Routes>
 }
 
 export default App;
