@@ -138,7 +138,8 @@ app.post('/run', async (req,res)=>{
   //make the frontend look nice and work
 })
 app.post('/update',async (req,res)=>{
-  csv.findByIdAndUpdate(mongoose.Types.ObjectId(req.body.csvid),{status:1,url:"https://csv-storages.s3.us-east-2.amazonaws.com/"+req.body.csvid+".csv"})
+  await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:1,url:"https://csv-storages.s3.us-east-2.amazonaws.com/"+req.body.csvid+".csv"})
+  res.send("cool")
 })
 
 app.post('/create-checkout-session', async (req, res) => {
