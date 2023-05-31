@@ -2,14 +2,14 @@ import axios from 'axios'
 import {useIsAuthenticated} from 'react-auth-kit'
 function Register(){
     const isAuthenticated = useIsAuthenticated()
-    if(isAuthenticated){
+    if(isAuthenticated()){
         window.location.href = "/"
     }
     function submit(e) {
         e.preventDefault()
         axios({
             method:"POST",
-            url:"https://backend-kn3o.onrender.com/register",
+            url:"http://localhost:5000/register",
             data:{
                 username:e.target.elements.username.value,
                 email:e.target.elements.email.value,

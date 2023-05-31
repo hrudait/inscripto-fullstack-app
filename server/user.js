@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const CSV = require('./csv')
 const user = new mongoose.Schema({
     username: String,
     password: String,
@@ -6,6 +7,7 @@ const user = new mongoose.Schema({
     remainingUses: Number,
     emailVerified: Boolean,
     subscription:String,
+    csvs:[String],
 },{collection:'userlogins'})
 
 module.exports = mongoose.model('User',user)
