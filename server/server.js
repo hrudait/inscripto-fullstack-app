@@ -1,4 +1,5 @@
 require('dotenv').config();
+const axios = require('axios')
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose') 
@@ -101,11 +102,14 @@ app.get("/auth", async(req,res)=>{
   }
 })
 app.post('/run', async (req,res)=>{
-  const doc = User.findOne({username:req.body.username})
+  console.log(req);
+  const doc = await  User.findOne({username:req.body.username})
+  console.log(doc.remainingUses)
   if(doc.remainingUses<=0){
     res.send("fail")
   }
   else{
+    console.log("ok")
     const searchTerm = req.body.searchTerm.replaceAll(" ","+")
     const location = req.body.location.replaceAll(" ", "+")
     const url = "https://www.google.com/maps/search/"+searchTerm+"+near+"+location
@@ -118,12 +122,18 @@ app.post('/run', async (req,res)=>{
     })
     await newCSV.save();
     const id = newCSV._id
-    User.findOneAndUpdate(
+    await User.findOneAndUpdate(
       { username: req.body.username }, 
-      { $push: { csvs: id },remainingUses:doc.remainingUses-1},
-      done
+      { $push: { csvs: id },remainingUses:doc.remainingUses-1}
     );
+    try{
+      await axios.post("https://rwe2cit7b7.execute-api.us-east-2.amazonaws.com/prod/runner",{"username":req.body.username,"url":url,"csvid":id})
+    }catch{
+      res.send("ok")
+    }
+    res.send("ok");
   }
+  console.log("done")
   //ok so this so far takes in a location string and searchTerm then converts it to the url to send to aws. It creates the csv document and adds the id of the csv to the 
   //User's array of csv ids
   //To Do:
