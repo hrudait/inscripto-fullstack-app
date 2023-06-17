@@ -199,7 +199,7 @@ app.post('/create-checkout-session', async (req, res) => {
   res.send(session.url);
 });
 
-const endpointSecret = "whsec_70457b6e7d763216d551ad0837c1145d1e9f7bda2777d792dcd03cd6246c67d5";
+const endpointSecret = "whsec_wFpha6VidlfVmdErSsa6JQOPPTjXzhGx";
 
 app.post('/webhook', bodyParser.raw({type: 'application/json'}), async (request, response) => {
   let event;
