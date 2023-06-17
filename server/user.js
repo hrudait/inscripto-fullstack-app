@@ -6,7 +6,7 @@ const user = new mongoose.Schema({
     email: String,
     remainingUses: Number,
     emailVerified: Boolean,
-    subscription:String,
+    customerId:String,
     csvs:[String],
 },{collection:'userlogins'})
 

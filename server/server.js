@@ -69,10 +69,11 @@ app.post("/login" , async (req,res)=>{
 })
 app.post("/register" , async (req,res)=>{
   const doc = await User.findOne({email: req.body.email})
-  if(doc) res.send("Email already in use")
+  if(doc) return res.send("Email already in use")
   const d = await User.findOne({username: req.body.username})
-  if(d) res.send("Choose a different username")
+  if(d) return res.send("Choose a different username")
   if(!d){
+    const customer = await stripe.customers.create();
     const newUser = new User({
       username: req.body.username,
       password: await bcrypt.hash(req.body.password,10),
@@ -80,10 +81,10 @@ app.post("/register" , async (req,res)=>{
       remainingUses: 0,
       startDate: -1,
       emailVerified: false,
-      subscription: null,
+      customerId: customer.id,
     })
     await newUser.save()
-    res.send("/login")
+    return res.send("/login")
   }
 })
 app.get("/auth", async(req,res)=>{
@@ -91,8 +92,7 @@ app.get("/auth", async(req,res)=>{
     const username = jwt.verify(req.headers.authorization,"UzLz!sJym8Zt@3XP")
     const user = await User.exists({username:username})
     if(!user){
-      res.status(400)
-      res.send("invalid token") 
+      res.status(400).send("invalid token") 
     }else{
       res.status(200).send(username)
     }
@@ -101,15 +101,23 @@ app.get("/auth", async(req,res)=>{
     res.send("invalid token") 
   }
 })
+
+app.post('/getUser', async(req,res)=>{
+  const user = await User.findOne({username:req.body.username})
+  if(!user){
+    return res.status(400)
+  }
+  return res.send({credits:user.remainingUses,emailVerified:user.emailVerified,customerId:user.customerId})
+})
+
 app.post('/run', async (req,res)=>{
   console.log(req);
-  const doc = await  User.findOne({username:req.body.username})
-  console.log(doc.remainingUses)
+  const doc = await User.findOne({username:req.body.username})
+  if(!doc) return res.send("fail")
   if(doc.remainingUses<=0){
-    res.send("fail")
+    return res.send("fail")
   }
   else{
-    console.log("ok")
     const searchTerm = req.body.searchTerm.replaceAll(" ","+")
     const location = req.body.location.replaceAll(" ", "+")
     const url = "https://www.google.com/maps/search/"+searchTerm+"+near+"+location
@@ -129,11 +137,9 @@ app.post('/run', async (req,res)=>{
     try{
       await axios.post("https://rwe2cit7b7.execute-api.us-east-2.amazonaws.com/prod/runner",{"username":req.body.username,"url":url,"csvid":id})
     }catch{
-      res.send("ok")
+      return res.send("ok")
     }
-    res.send("ok");
   }
-  console.log("done")
   //ok so this so far takes in a location string and searchTerm then converts it to the url to send to aws. It creates the csv document and adds the id of the csv to the 
   //User's array of csv ids
   //To Do:
@@ -149,13 +155,30 @@ app.post('/run', async (req,res)=>{
 })
 app.post('/update',async (req,res)=>{
   await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:1,url:"https://csv-storages.s3.us-east-2.amazonaws.com/"+req.body.csvid+".csv"})
-  res.send("cool")
+  return res.send("cool")
+})
+
+app.post('/checkout',async (req,res)=>{
+  const doc = await User.findOne({username:req.body.username})
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price: "price_1NJtCVE8uhRktaazdGhAscft",
+        quantity: parseInt(req.body.amount),
+      }
+    ],
+    customer:doc.customerId,
+    mode: 'payment',
+    success_url:"https://front-qqki.onrender.com/success",
+    cancel_url: "https://front-qqki.onrender.com/fail"
+  });
+  return res.send(session.url)
 })
 
 app.post('/create-checkout-session', async (req, res) => {
   
   const doc = await User.findOne({username:req.body.username})
-  if(!doc) res.status(303).redirect("/signout")
+  if(!doc) return res.status(303).redirect("/signout")
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
@@ -164,12 +187,13 @@ app.post('/create-checkout-session', async (req, res) => {
       },
     ],
     customer_email:doc.email,
+    customer:doc.customerId,
     mode: 'subscription',
     subscription_data:{
       metadata:{"username":req.body.username}
     },
-    success_url: process.env.FRONTEND_URL,
-    cancel_url: process.env.FRONTEND_URL+'/false',
+    success_url: "http://localhost:3000",
+    cancel_url: 'http://localhost:3000/false',
   });
 
   res.send(session.url);
@@ -190,13 +214,13 @@ app.post('/webhook', bodyParser.raw({type: 'application/json'}), async (request,
 
   // Handle the event
   switch (event.type) {
-    case 'invoice.paid':
-      const invoicePaymentSucceeded = event.data.object;
-      const subscription = await stripe.subscriptions.retrieve(invoicePaymentSucceeded.subscription)
-      if(subscription.status==="active"){
-        await User.findOneAndUpdate({username:subscription.metadata.username},{remainingUses:20,subscription:subscription.id})
-      }
-
+    case 'checkout.session.completed':
+      const session = event.data.object
+      const items = await stripe.checkout.sessions.listLineItems(
+        session.id,
+      )
+      const quantity = items.data[0].quantity
+      await User.findOneAndUpdate({customerId:session.customer},{$inc : {remainingUses:quantity}})
       break;
     // ... handle other event types
     default:
