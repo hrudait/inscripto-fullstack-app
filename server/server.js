@@ -216,14 +216,17 @@ app.post('/webhook', bodyParser.raw({type: 'application/json'}), async (request,
   switch (event.type) {
     case 'checkout.session.completed':
       const session = event.data.object
+      console.log(session)
       const items = await stripe.checkout.sessions.listLineItems(
         session.id,
       )
+      console.log(items)
       const quantity = items.data[0].quantity
+      console.log(quantity)
       await User.findOneAndUpdate({customerId:session.customer},{$inc : {remainingUses:quantity}})
       break;
     // ... handle other event types
     default:
   }
-  response.send();
+  response.status(200);
 });
