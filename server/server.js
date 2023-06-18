@@ -228,5 +228,5 @@ app.post('/webhook', bodyParser.raw({type: 'application/json'}), async (request,
     // ... handle other event types
     default:
   }
-  response.status(200);
+  response.status(200).send("success");
 });
