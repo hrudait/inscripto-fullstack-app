@@ -9,23 +9,6 @@ import { useIsAuthenticated, AuthProvider, RequireAuth, useSignOut } from "react
 import {BrowserRouter} from "react-router-dom"
 
 function App() {
-  // const [backendData, setBackendData] = useState([{}])
-
-  // useEffect(()=>{
-  //   //https://backend-kn3o.onrender.com/
-  //   fetch("http://localhost:5000/").then(
-  //     response => response.json()
-  //   ).then(
-  //     data=>{
-  //       setBackendData(data)
-  //     }
-  //   )
-  // },[])
-  // const PrivateRoute = ({ Component }) => {
-  //   const isAuthenticated = useIsAuthenticated();
-  //   const auth = isAuthenticated();
-  //   return auth ? <Component /> : <Navigate to="/login" />;
-  // };
   return (
     <AuthProvider authType = {'cookie'}
     authName={'_auth'}

@@ -11,7 +11,7 @@ function Login(){
         e.preventDefault()
         axios({
             method:"POST",
-            url:"https://backend-kn3o.onrender.com/login",
+            url:`${process.env.REACT_APP_BACKEND_URL}/login`,
             data:{
                 username:e.target.elements.username.value,
                 password:e.target.elements.password.value

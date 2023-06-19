@@ -7,7 +7,7 @@ function Home(){
     const authHeader = useAuthHeader()
     const authUser = useAuthUser()
     useEffect(()=>{
-        axios.get("https://backend-kn3o.onrender.com/auth",{headers:{"authorization":authHeader().substring(10)}})
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth`,{headers:{"authorization":authHeader().substring(10)}})
         .then((res)=>{
             if(!(res.data===authUser().username)){
                 window.location.href = "/signout" 
@@ -18,13 +18,13 @@ function Home(){
         })
     },[])
     function checkout(e){
-        axios.post("https://backend-kn3o.onrender.com/create-checkout-session",{username:authUser().username})
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-checkout-session`,{username:authUser().username})
         .then((res)=>{
             window.location = res.data
         })
     }
     function submit(e){
-        axios.post("https://backend-kn3o.onrender.com/run",{username:authUser().username,url:e.target.elements.url.value})
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/run`,{username:authUser().username,url:e.target.elements.url.value})
     }
     return(
         <div>

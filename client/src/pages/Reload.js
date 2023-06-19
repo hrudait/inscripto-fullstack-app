@@ -7,7 +7,7 @@ function Reload(){
     const authHeader = useAuthHeader()
     const user = auth()
     useEffect(()=>{
-        axios.get("https://backend-kn3o.onrender.com/auth",{headers:{"authorization":authHeader().substring(10)}})
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth`,{headers:{"authorization":authHeader().substring(10)}})
         .then((res)=>{
             if(!(res.data===user.username)){
                 window.location.href = "/signout" 
@@ -19,7 +19,7 @@ function Reload(){
     },[])
     //get the user credits
     useEffect(()=>{
-        axios.post("https://backend-kn3o.onrender.com/getUser",{username:user.username})
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`,{username:user.username})
         .then((res)=>{
             setcredits(res.data.credits)
         })
@@ -35,7 +35,7 @@ function Reload(){
         event.target.value = value;
     }
     function next(number){
-        axios.post("https://backend-kn3o.onrender.com/checkout",{username:user.username,amount:number})
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/checkout`,{username:user.username,amount:number})
         .then((res)=>{
             window.location = res.data
         })

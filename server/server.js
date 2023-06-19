@@ -169,35 +169,12 @@ app.post('/checkout',async (req,res)=>{
     ],
     customer:doc.customerId,
     mode: 'payment',
-    success_url:"https://front-qqki.onrender.com/success",
-    cancel_url: "https://front-qqki.onrender.com/fail"
+    success_url:`${process.env.FRONTEND_URL}/success`,
+    cancel_url: `${process.env.FRONTEND_URL}/fail`
   });
   return res.send(session.url)
 })
 
-app.post('/create-checkout-session', async (req, res) => {
-  
-  const doc = await User.findOne({username:req.body.username})
-  if(!doc) return res.status(303).redirect("/signout")
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price: 'price_1N7OQsE8uhRktaazD5RevTmF',
-        quantity: 1,
-      },
-    ],
-    customer_email:doc.email,
-    customer:doc.customerId,
-    mode: 'subscription',
-    subscription_data:{
-      metadata:{"username":req.body.username}
-    },
-    success_url: "http://localhost:3000",
-    cancel_url: 'http://localhost:3000/false',
-  });
-
-  res.send(session.url);
-});
 
 const endpointSecret = "whsec_wFpha6VidlfVmdErSsa6JQOPPTjXzhGx";
 

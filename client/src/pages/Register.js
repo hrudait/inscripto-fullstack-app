@@ -9,7 +9,7 @@ function Register(){
         e.preventDefault()
         axios({
             method:"POST",
-            url:"https://backend-kn3o.onrender.com/register",
+            url:`${process.env.REACT_APP_BACKEND_URL}/register`,
             data:{
                 username:e.target.elements.username.value,
                 email:e.target.elements.email.value,
