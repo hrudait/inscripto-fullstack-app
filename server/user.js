@@ -6,8 +6,10 @@ const user = new mongoose.Schema({
     email: String,
     remainingUses: Number,
     emailVerified: Boolean,
+    phoneVerified: Boolean,
     customerId:String,
-    csvs:[String],
+    currentcsvs:[String],
+    pastcsvs:[String],
 },{collection:'userlogins'})
 
 module.exports = mongoose.model('User',user)

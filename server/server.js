@@ -109,9 +109,41 @@ app.post('/getUser', async(req,res)=>{
   }
   return res.send({credits:user.remainingUses,emailVerified:user.emailVerified,customerId:user.customerId})
 })
+app.post('/getCurrentCsvAmount', async(req,res)=>{
+  const doc = await User.findOne({username:req.body.username})
+  if(doc){
+    return res.send(doc.currentcsvs.length);
+  }
+  else{
+    return res.status(400).send("fail")
+  }
+})
+
+app.post("/getCurrent", async(req,res)=>{
+  const doc = await User.findOne({username:req.body.username})
+  const csvlist = doc.currentcsvs
+  const returnlist = []
+  for (const csve of csvlist) {
+    const csvitem = await csv.findById(new mongoose.Types.ObjectId(csve))
+    const temp = {id:csve,name:csvitem.name,location:csvitem.location}
+    returnlist.push(temp)
+  }
+  return res.send(returnlist)
+})
+
+app.post("/getFinished", async(req,res)=>{
+  const doc = await User.findOne({username:req.body.username})
+  const csvlist = doc.pastcsvs
+  const returnlist = []
+  for (const csve of csvlist) {
+    const csvitem = await csv.findById(new mongoose.Types.ObjectId(csve))
+    const temp = {id:csve,name:csvitem.name,location:csvitem.location,url:csvitem.url}
+    returnlist.push(temp)
+  }
+  return res.send(returnlist)
+})
 
 app.post('/run', async (req,res)=>{
-  console.log(req);
   const doc = await User.findOne({username:req.body.username})
   if(!doc) return res.send("fail")
   if(doc.remainingUses<=0){
@@ -132,7 +164,7 @@ app.post('/run', async (req,res)=>{
     const id = newCSV._id
     await User.findOneAndUpdate(
       { username: req.body.username }, 
-      { $push: { csvs: id },remainingUses:doc.remainingUses-1}
+      { $push: { currentcsvs: id },remainingUses:doc.remainingUses-1}
     );
     try{
       await axios.post("https://rwe2cit7b7.execute-api.us-east-2.amazonaws.com/prod/runner",{"username":req.body.username,"url":url,"csvid":id})
@@ -155,6 +187,10 @@ app.post('/run', async (req,res)=>{
 })
 app.post('/update',async (req,res)=>{
   await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:1,url:"https://csv-storages.s3.us-east-2.amazonaws.com/"+req.body.csvid+".csv"})
+  console.log(req.body.csvid)
+  console.log(req.body.username)
+  await User.findOneAndUpdate({username:req.body.username},{$pull:{currentcsvs:req.body.csvid},$push:{pastcsvs:req.body.csvid}})
+  
   return res.send("cool")
 })
 
