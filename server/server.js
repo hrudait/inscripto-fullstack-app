@@ -134,10 +134,11 @@ app.post("/getCurrent", async(req,res)=>{
 app.post("/getFinished", async(req,res)=>{
   const doc = await User.findOne({username:req.body.username})
   const csvlist = doc.pastcsvs
+  const page = parseInt(req.body.page)
   const returnlist = []
-  for (const csve of csvlist) {
-    const csvitem = await csv.findById(new mongoose.Types.ObjectId(csve))
-    const temp = {id:csve,name:csvitem.name,location:csvitem.location,url:csvitem.url}
+  for (let i = (page-1)*5;i<((page-1)*5)+5;i++) {
+    const csvitem = await csv.findById(new mongoose.Types.ObjectId(csvlist[i]))
+    const temp = {id:csvlist[i],name:csvitem.name,location:csvitem.location,url:csvitem.url}
     returnlist.push(temp)
   }
   return res.send(returnlist)
