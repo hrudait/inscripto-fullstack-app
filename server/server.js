@@ -137,10 +137,13 @@ app.post("/getFinished", async(req,res)=>{
   const page = parseInt(req.body.page)
   const returnlist = []
   for (let i = (page-1)*5;i<((page-1)*5)+5;i++) {
-    const csvitem = await csv.findById(new mongoose.Types.ObjectId(csvlist[i]))
-    const temp = {id:csvlist[i],name:csvitem.name,location:csvitem.location,url:csvitem.url}
-    returnlist.push(temp)
+    if(i<csvlist.length){
+      const csvitem = await csv.findById(new mongoose.Types.ObjectId(csvlist[i]))
+      const temp = {id:csvlist[i],name:csvitem.name,location:csvitem.location,url:csvitem.url}
+      returnlist.push(temp)
+    }
   }
+  returnlist.push(csvlist.length)
   return res.send(returnlist)
 })
 
