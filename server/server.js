@@ -154,8 +154,8 @@ app.post('/run', async (req,res)=>{
     return res.send("fail")
   }
   else{
-    const searchTerm = req.body.searchTerm.replaceAll(" ","+")
-    const location = req.body.location.replaceAll(" ", "+")
+    const searchTerm = req.body.searchTerm.replace(" /g","+")
+    const location = req.body.location.replace(" /g", "+")
     const url = "https://www.google.com/maps/search/"+searchTerm+"+near+"+location
     const newCSV = new csv({
       name:req.body.searchTerm,
