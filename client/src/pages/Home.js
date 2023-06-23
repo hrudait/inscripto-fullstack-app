@@ -5,6 +5,8 @@ import { useAuthHeader, useAuthUser } from "react-auth-kit";
 
 function Home(){
     const [credits, setcredits] = useState();
+    const [page, setPage] = useState(1);
+    const [maxPages, setMaxPages] = useState(1)
     const [currentData, setcurrent] = useState();
     const [finishedData, setfinished] = useState();
     const authHeader = useAuthHeader()
@@ -30,7 +32,7 @@ function Home(){
             setcredits(res.data.credits)
         })
         getCurrent()
-        getFinished(1)
+        getFinished()
     },[])
 
     function checkout(e){
@@ -67,13 +69,18 @@ function Home(){
     function getCurrent(){
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/getCurrent`,{username:user.username})
         .then((res)=>{
+            console.log(res.data)
             setcurrent(res.data)
         })
     }
-    function getFinished(page){
+    function getFinished(){
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFinished`,{username:user.username,page:page})
         .then((res)=>{
-            setfinished(res.data)
+            console.log(res.data)
+            const list = res.data
+            setMaxPages(Math.floor((list.pop())/6)+1)
+            console.log(list)
+            setfinished(list)
         })
     }
 
@@ -95,10 +102,23 @@ function Home(){
         )
     }
 
+    function incPage(){
+        setPage(page+1)
+        getCurrent()
+        getFinished()
+    }
+    function decPage(){
+        setPage(page-1)
+        getCurrent()
+        getFinished()
+    }
+
     function FinishedCsvs(){
         if(!finishedData){
             return(<div></div>)
         }
+        const hideLeftA = (page===1)
+        const hideRightA = (maxPages===page)
         return(
             <div>
                 {
@@ -110,6 +130,12 @@ function Home(){
                         </div>
                     ))
                 }
+                <div>
+                {hideLeftA ? null : <span id="lefta" onClick={()=>decPage()}>&lt;</span>}
+                <span>{page}</span>
+                {hideRightA ? null : <span id="righta" onClick={()=>incPage()}>&gt;</span>}
+                    
+                </div>
             </div>
         )
     }
