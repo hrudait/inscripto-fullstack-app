@@ -142,7 +142,7 @@ body{
                         <a className='forgot' href='/forgot'>Forgot Password</a>
                         <a className='register' href='/register'>Create An Account</a>
                     </div>
-                    <button type='submit' className="loginbutton"><label className='loginbuttontext'>login</label></button>
+                    <button type='submit' className="loginbutton"><label onClick={Submit} className='loginbuttontext'>login</label></button>
                 </form>
             </div>
         </div>
