@@ -30,98 +30,111 @@ function Register(){
     }
     const css = `
     
-body {
-    font-size: 16px;
-    background: rgba(86,133,157,1);
-  }
-.box {
-  width: 30rem;
-  height: 32.5rem;
-  background: rgba(224,223,223,1);
-  opacity: 1;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  border-top-left-radius: 27px;
-  border-top-right-radius: 27px;
-  border-bottom-left-radius: 27px;
-  border-bottom-right-radius: 27px;
-  overflow: hidden;
-}
-.registertext {
-  width:100%;
-  color: rgba(0,0,0,1);
-  position: absolute;
-  font-family: DM Sans;
-  font-weight: Regular;
-  font-size: 7rem;
-  opacity: 1;
-  text-align: center;
-}
-.registerbutton {
-  width: 90%;
-  height: 10%;
-  position: absolute;
-  top: 87.5%;
-  left: 5%;
-  border-top-left-radius: 50vw;
-  border-top-right-radius: 50vw;
-  border-bottom-left-radius: 50vw;
-  border-bottom-right-radius: 50vw;
-  border: 0;
-  background-color: rgba(86,31,157,1);
-  
-  overflow: hidden;
-}
-.registerbutton:hover{
-  opacity: 0.8;
-}
-.registerbuttontext{
-  color: white;
-  font-size: 2rem;
-}
-.username{
-  position: absolute;
-  width: 90%;
-  height: 4rem;
-  top: 10rem;
-  left: 5%;
-  font-size: 1.75rem;
-  padding-left: 1%;
-  padding-top: .5%;
-}
-.email{
-  position: absolute;
-  width: 90%;
-  height: 4rem;
-  top: 15rem;
-  left: 5%;
-  font-size: 1.75rem;
-  padding-left: 1%;
-  padding-top: .5%;
-}
-.password{
-  position: absolute;
-  width: 90%;
-  height: 4rem;
-  top: 20rem;
-  left: 5%;
-  font-size: 1.75rem;
-  padding-left: 1%;
-  padding-top: .5%;
-  font-family: Geologica;
-  font-weight: Regular;
-  padding-bottom: 0%;
-}
-.login{
-  position: absolute;
-  top: 77.5%;
-  left: 5%;
-  font-size: 1.5rem;
-  font-family: Geologica;
-}
+    body{
+      background-color: black;
+    }
+    .box{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    
+      align-items: center;
+    }
+    .registertext{   
+      color: white;
+      margin: 0;
+      text-align: center;
+      font-size: 3vw;
+      font-family: 'Open Sans';
+      font-weight: 400;
+      margin-bottom: 2vw;
+      margin-left: 6vw;
+      margin-right: 6vw;
+    }
+    .username{
+      background-color: black;
+      color: white;
+      border: .25vw solid white;
+      border-radius: .75vw;
+      width: 97.5%;
+      height: 5vw;
+      font-size: 1.66vw;
+      font-family: 'Open Sans';
+      font-weight: 400;
+      margin: 0;
+      padding: 0;
+      padding-left: 2.5%;
+      margin-bottom: 1vw;
+      outline-color: white;
+      
+    }
+    .email{
+      background-color: black;
+      color: white;
+      border: .25vw solid white;
+      border-radius: .75vw;
+      width: 97.5%;
+      height: 5vw;
+      font-size: 1.66vw;
+      font-family: 'Open Sans';
+      font-weight: 400;
+      margin: 0;
+      padding: 0;
+      padding-left: 2.5%;
+      margin-bottom: 1vw;
+      outline-color: white;
+      
+    }
+    .password{
+      background-color: black;
+      color: white;
+      border: .25vw solid white;
+      border-radius: .75vw;
+      width: 97.5%;
+      height: 5vw;
+      font-size: 1.66vw;
+      font-family: 'Open Sans';
+      font-weight: 400;
+      margin: 0;
+      padding: 0;
+      outline-color: white;
+      padding-left: 2.5%;
+    }
+    .linkcontainer{
+      margin-left: 1px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 1vw;
+    }
+    .login{
+      color: white;
+      font-family: 'Open Sans';
+      font-weight: 400;
+      font-size: 1.66vw;
+    }
+    .registerbutton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 60%;
+      margin: 0 auto;
+      margin-top: 1vw;
+      height: 5vw;
+      border: 0;
+      border-radius: .5vw;
+    }
+    .registerbuttontext{
+      color: black;
+      font-family: 'Open Sans';
+      font-weight: 400;
+      font-size: 3vw;
+    }
+    .registerbutton:hover{
+      opacity: 0.8;
+    }
     `
     return(
         <div className='registerpage'>
@@ -129,19 +142,19 @@ body {
                 {css}
             </style>
             <div className="box">
-                <span className="registertext">Register</span>
-                <div className="registerform">
-                    <form onSubmit={submit}>
-                        <input className = "username" id="username"type="text" title="username" placeholder="Username"  required/><br />
-                        <input className = "email" id="email"type="email" title="email" placeholder="Email"  required/><br />
-                        <input className = "password" id="password"type="password" title="password" placeholder="Password" required/><br />
-                        <div className='linkcontainer'>
-                            <a className='login' href='/login'>Login</a>
-                        </div>
-                        <button type='submit' className="registerbutton"><label className='registerbuttontext'>Register</label></button>
-                    </form>
-                </div>
-            </div>
+              <h1 className="registertext">Create An Account</h1>
+              <div className="registerform">
+                  <form onSubmit={submit}>
+                      <input className = "username" id="username"type="text" title="username" placeholder="Username"  required/><br />
+                      <input className = "email" id="email"type="email" title="email" placeholder="Email"  required/><br />
+                      <input className = "password" id="password"type="password" title="password" placeholder="Password" required/><br />
+                      <div className="linkcontainer">
+                          <a className='login' href='/login'>Already have an Account?</a>
+                      </div>
+                      <button type='submit' className="registerbutton"><span className='registerbuttontext'>register</span></button>
+                  </form>
+              </div>
+          </div>
         </div>
 
     )
