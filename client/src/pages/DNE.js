@@ -1,10 +1,8 @@
 import { useSignOut } from "react-auth-kit";
 
 function SignOut(){
-    const signOut = useSignOut()
-    signOut()
-    function login(){
-        window.location.href = '/login'
+    function home(){
+        window.location.href = '/'
     }
     const css = `body{
         background-color: black;
@@ -27,8 +25,8 @@ function SignOut(){
         font-family: 'Open Sans';
         font-weight: 400;
         margin-bottom: 10vw;
-        margin-left: 2vw;
-        margin-right: 2vw;
+        margin-left: 2.5vw;
+        margin-right: 2.5vw;
       }
     
       .return {
@@ -58,8 +56,8 @@ function SignOut(){
                 {css}
             </style>
             <div className="box">
-               <h1 className="signedOut">You have been signed out.</h1>
-                <button className = 'return' onClick={login}><span className="returnText">return to login</span></button>
+                <h1 className="signedOut">This page does not exist.</h1>
+                <button className = 'return' onClick={home}><span className="returnText">return to home</span></button>
             </div>
         </div>
     )
