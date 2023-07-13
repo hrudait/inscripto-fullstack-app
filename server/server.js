@@ -12,7 +12,7 @@ const User = require('./user');
 const csv = require('./csv');
 const user = require('./user');
 const app = express();
-const stripe = require('stripe')('sk_test_51IbtU4E8uhRktaazSuaLHtFdvqe1zQ2dXwmnci8Uzdj1HuT6aEMcmRAOGXOHu6AVAVgxuuQEpU5gRYFLnUGaPeUe00rTM9vVfX')
+const stripe = require('stripe')('pk_live_51IbtU4E8uhRktaazBd72S8TcLqcr2hYwmrxpaCAJXkrFkrZ1WZzkUgEfaQ8bycvij9G5qYhuocv9lCRuAaotvOaa00sZebFczl')
 
 
 const port = process.env.PORT || 5000
@@ -209,14 +209,14 @@ app.post('/checkout',async (req,res)=>{
     ],
     customer:doc.customerId,
     mode: 'payment',
-    success_url:`${process.env.FRONTEND_URL}/success`,
-    cancel_url: `${process.env.FRONTEND_URL}/fail`
+    success_url:`${process.env.FRONTEND_URL}`,
+    cancel_url: `${process.env.FRONTEND_URL}`
   });
   return res.send(session.url)
 })
 
 
-const endpointSecret = "whsec_wFpha6VidlfVmdErSsa6JQOPPTjXzhGx";
+const endpointSecret = "whsec_JHFWtgLGjm5NlLGEeiipXvl6Tghc89mF";
 
 app.post('/webhook', bodyParser.raw({type: 'application/json'}), async (request, response) => {
   let event;
