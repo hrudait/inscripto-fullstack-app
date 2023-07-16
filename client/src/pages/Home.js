@@ -72,6 +72,7 @@ function Home(){
             setcurrent(res.data)
         })
     }
+
     function getFinished(){
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFinished`,{username:user.username,page:page})
         .then((res)=>{
@@ -138,6 +139,17 @@ function Home(){
             </div>
         )
     }
+    useEffect(() => {
+      if (currentData) {
+        const intervalone = setInterval(getCurrent, 30000);
+        const intervaltwo = setInterval(getFinished, 30000);
+  
+        return () => {
+          clearInterval(intervalone);
+          clearInterval(intervaltwo);
+        };
+      }
+    }, [currentData]);
 
     const css = `
     .pagechanger{

@@ -218,6 +218,9 @@ app.post("/getCurrent", async(req,res)=>{
     const temp = {id:csve,name:csvitem.name,location:csvitem.location}
     returnlist.push(temp)
   }
+  if(returnlist.length===0){
+    return res.send(null)
+  }
   return res.send(returnlist)
 })
 
