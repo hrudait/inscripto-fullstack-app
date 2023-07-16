@@ -48,46 +48,58 @@ function Reload(){
     }
 
     const css = `body{
-        background-color: black;
+        background-color: #363636;
       }
-    .logo{
-      width: 20vw;
-      margin: 0;
-    }
-    .navbar{
-      display: flex;
-      justify-content: space-evenly;
-      margin: 0;
-    }
-    .navhome{
-      color: white;
-      font-size: 3vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      margin-right: 3.5vw;
-    }
-    .navhome:hover{
-      opacity: 0.8;
-    }
-    .navreload{
-      color: white;
-      font-size: 3vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      margin-right: 4.5vw;
-    }
-    .navreload:hover{
-      opacity: 0.8;
-    }
-    .credits{
-      color: white;
-      font-size: 3vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;  
-    }
+      .logo{
+        width: 20vw;
+        margin: 0;
+      }
+      .navbar{
+        display: flex;
+        justify-content: space-evenly;
+        margin: 0;
+        margin-bottom: 2vw;
+      }
+      .navhome{
+        color: white;
+        font-size: 3vw;
+        font-family: 'Open Sans';
+        font-weight: 400;
+        margin: 0;
+        margin-right: 3.5vw;
+      }
+      .navhome:hover{
+        opacity: 0.8;
+      }
+      .navreload{
+        color: white;
+        font-size: 3vw;
+        font-family: 'Open Sans';
+        font-weight: 400;
+        margin: 0;
+        margin-right: 3.5vw;
+      }
+      .navreload:hover{
+        opacity: 0.8;
+      }
+      .navsignout{
+        color: white;
+        font-size: 3vw;
+        font-family: 'Open Sans';
+        font-weight: 400;
+        margin: 0;
+        margin-right: 4.5vw;
+      }
+      .navsignout:hover{
+        opacity: 0.8;
+      }
+      .credits{
+        color: white;
+        font-size: 3vw;
+        font-family: 'Open Sans';
+        font-weight: 400;
+        margin: 0;  
+      }
     .choose{
       color: white;
       font-size: 3vw;
@@ -118,7 +130,7 @@ function Reload(){
       border-radius: .5vw;
     }
     .checkoutText{
-      color: black;
+      color: #363636;
       font-family: 'Open Sans';
       font-weight: 400;
       font-size: 3vw;
@@ -127,7 +139,7 @@ function Reload(){
       opacity: 0.8;
     }
     .inputbox{
-      background-color: black;
+      background-color: #363636;
       color: white;
       border: .25vw solid white;
       border-radius: .75vw;
@@ -174,6 +186,7 @@ function Reload(){
       margin: 0;
     }
     .packs{
+      color: #363636;
       width: 15vw;
       background-color: white;
       font-family: 'Open Sans';
@@ -193,13 +206,14 @@ function Reload(){
             <style>
                 {css}
             </style>
-            <header className="navbar">
-                <img className ="logo"src={logo}/>
+            <header class="navbar">
+                <img class ="logo"src={logo}/>
                 <nav>
-                    <a href="/" className="navhome">Home</a>
-                    <a href="/reload" className="navreload">Reload</a>
+                    <a href="/" class="navhome">Home</a>
+                    <a href="/reload" class="navreload">Reload</a>
+                    <a href="/signout" class="navsignout">Signout</a>
                 </nav>
-                <h1 className="credits">credits: {credits}</h1>
+                <h1 class="credits">credits: {credits}</h1>
             </header>
             <div>
                 <div className="container">

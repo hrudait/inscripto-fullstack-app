@@ -12,8 +12,8 @@ const User = require('./user');
 const csv = require('./csv');
 const user = require('./user');
 const app = express();
-const stripe = require('stripe')('pk_live_51IbtU4E8uhRktaazBd72S8TcLqcr2hYwmrxpaCAJXkrFkrZ1WZzkUgEfaQ8bycvij9G5qYhuocv9lCRuAaotvOaa00sZebFczl')
-
+const stripe = require('stripe')('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')
+const qs = require('qs')
 
 const port = process.env.PORT || 5000
 app.listen(port)
@@ -67,6 +67,88 @@ app.post("/login" , async (req,res)=>{
     }
   }
 })
+
+app.post("/sendverify", async(req,res)=>{
+  const check = await User.exists({phoneNumber:req.body.phone})
+  if(check){
+    return res.status(200).send("al")
+  }
+  try{
+    await axios.post("https://verify.twilio.com/v2/Services/VA1f7341b36346d0225b05a3976ddb0370/Verifications",qs.stringify({'To': req.body.phone, 'Channel': 'sms'}),{auth: {
+      username: "ACc9f7abb0037099391fff3a262b15e17c",
+      password: "f4dadbc5b7b908c4e7434dd69d7d259f"
+    }})
+  }
+  catch(e){
+    console.log(e)
+    return res.status(200).send("fail")
+  }
+  return res.status(200).send("sent")
+})
+app.post("/verifycode", async(req,res)=>{
+  try{
+    
+    const stat = await axios.post("https://verify.twilio.com/v2/Services/VA1f7341b36346d0225b05a3976ddb0370/VerificationCheck",qs.stringify({'To': req.body.phone, 'Code': req.body.code}),{auth: {
+      username: "ACc9f7abb0037099391fff3a262b15e17c",
+      password: "f4dadbc5b7b908c4e7434dd69d7d259f"
+    }})
+    if(stat.data.status==="approved"){
+      res.status(200).send("verified")
+      await User.findOneAndUpdate({username:req.body.username},{phoneNumber:req.body.phone,phoneVerified:true,remainingUses:5})
+    }
+    else{
+      res.status(200).send("fail")
+    }
+  }
+  catch(e){
+    console.log(e)
+    return res.status(200).send("fail")
+  }
+})
+app.post("/sendforgot", async(req,res)=>{
+  const check = await User.exists({email:req.body.email})
+  if(check){ 
+    const user = await User.findOne({email:req.body.email})
+    try{
+      await axios.post("https://verify.twilio.com/v2/Services/VA1f7341b36346d0225b05a3976ddb0370/Verifications",qs.stringify({'To': user.phoneNumber, 'Channel': 'sms'}),{auth: {
+        username: "ACc9f7abb0037099391fff3a262b15e17c",
+        password: "f4dadbc5b7b908c4e7434dd69d7d259f"
+      }})
+    }
+    catch(e){
+      console.log(e)
+    } 
+    return res.status(200).send("ok")
+  }
+  else{
+    return res.status(200).send("ok")
+  }
+  
+})
+app.post("/verifyforgot", async(req,res)=>{
+  const check = await User.exists({email:req.body.email})
+  if(check){
+    const user = await User.findOne({email:req.body.email})
+    try{  
+      const stat = await axios.post("https://verify.twilio.com/v2/Services/VA1f7341b36346d0225b05a3976ddb0370/VerificationCheck",qs.stringify({'To': user.phoneNumber, 'Code': req.body.code}),{auth: {
+        username: "ACc9f7abb0037099391fff3a262b15e17c",
+        password: "f4dadbc5b7b908c4e7434dd69d7d259f"
+      }})
+      if(stat.data.status==="approved"){
+        await User.findOneAndUpdate({email:req.body.email},{password:await bcrypt.hash(req.body.newpassword,10)})
+      }
+    }
+    catch(e){
+      console.log(e)
+    }
+    return res.status(200).send("ok")
+  }
+  else{
+    return res.status(200).send("ok")
+  }
+
+})
+
 app.post("/register" , async (req,res)=>{
   const doc = await User.findOne({email: req.body.email})
   if(doc) return res.send("Email already in use")
@@ -80,7 +162,9 @@ app.post("/register" , async (req,res)=>{
       email: req.body.email,
       remainingUses: 0,
       startDate: -1,
-      emailVerified: false,
+
+      phoneVerified: false,
+      phoneNumber: "",
       customerId: customer.id,
     })
     await newUser.save()
@@ -94,7 +178,13 @@ app.get("/auth", async(req,res)=>{
     if(!user){
       res.status(400).send("invalid token") 
     }else{
-      res.status(200).send(username)
+      const useritem = await User.findOne({username:username})
+      if(useritem.phoneVerified===false){
+        res.status(200).send("verify")
+      }
+      else{
+        res.status(200).send(username)
+      }
     }
   }catch(e){ 
     res.status(400)

@@ -31,7 +31,7 @@ function Register(){
     const css = `
     
     body{
-      background-color: black;
+      background-color: #363636;
     }
     .box{
       position: absolute;
@@ -54,7 +54,7 @@ function Register(){
       margin-right: 6vw;
     }
     .username{
-      background-color: black;
+      background-color: #363636;
       color: white;
       border: .25vw solid white;
       border-radius: .75vw;
@@ -71,7 +71,7 @@ function Register(){
       
     }
     .email{
-      background-color: black;
+      background-color: #363636;
       color: white;
       border: .25vw solid white;
       border-radius: .75vw;
@@ -88,7 +88,7 @@ function Register(){
       
     }
     .password{
-      background-color: black;
+      background-color: #363636;
       color: white;
       border: .25vw solid white;
       border-radius: .75vw;
@@ -127,7 +127,7 @@ function Register(){
       border-radius: .5vw;
     }
     .registerbuttontext{
-      color: black;
+      color: #363636;
       font-family: 'Open Sans';
       font-weight: 400;
       font-size: 3vw;

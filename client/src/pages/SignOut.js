@@ -7,7 +7,7 @@ function SignOut(){
         window.location.href = '/login'
     }
     const css = `body{
-        background-color: black;
+        background-color: #363636;
       }
     .box{
         position: absolute;
@@ -43,7 +43,7 @@ function SignOut(){
         border-radius: .5vw;
       }
       .returnText{
-        color: black;
+        color: #363636;
         font-family: 'Open Sans';
         font-weight: 400;
         font-size: 3vw;

@@ -8,6 +8,8 @@ import SignOut from "./pages/SignOut";
 import DNE from "./pages/DNE"
 import { useIsAuthenticated, AuthProvider, RequireAuth, useSignOut } from "react-auth-kit";
 import {BrowserRouter} from "react-router-dom"
+import Forgot from "./pages/Forgot";
+import Verify from "./pages/Verify";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Routes>
           <Route path="/" element={<RequireAuth loginPath={"/login"}><Home /></RequireAuth>}/>
           <Route path="/login" element={<Login />}/>
+          <Route path="/forgot" element={<Forgot />}/>
+          <Route path="/verify" element={<Verify />}/>
           <Route path="/reload" element={<Reload />}/>
           <Route path="/register" element ={<Register />} />
           <Route path="/signout" element={<SignOut />}/>

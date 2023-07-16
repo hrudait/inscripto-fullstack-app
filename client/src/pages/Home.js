@@ -17,7 +17,12 @@ function Home(){
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth`,{headers:{"authorization":authHeader().substring(10)}})
         .then((res)=>{
             if(!(res.data===authUser().username)){
+              if(res.data==="verify"){
+                window.location.href = "/verify" 
+              }
+              else{
                 window.location.href = "/signout" 
+              }
             }
         })
         .catch((e)=>{            
@@ -35,12 +40,6 @@ function Home(){
         getFinished()
     },[])
 
-    function checkout(e){
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/create-checkout-session`,{username:user.username})
-        .then((res)=>{
-            window.location = res.data
-        })
-    }
 
     function submit(e){
         if(credits===0){
@@ -175,7 +174,7 @@ function Home(){
         text-decoration: underline;
     }
     body{
-        background-color: black;
+        background-color: #363636;
       }
     .logo{
       width: 20vw;
@@ -204,9 +203,20 @@ function Home(){
       font-family: 'Open Sans';
       font-weight: 400;
       margin: 0;
-      margin-right: 4.5vw;
+      margin-right: 3.5vw;
     }
     .navreload:hover{
+      opacity: 0.8;
+    }
+    .navsignout{
+      color: white;
+      font-size: 3vw;
+      font-family: 'Open Sans';
+      font-weight: 400;
+      margin: 0;
+      margin-right: 4.5vw;
+    }
+    .navsignout:hover{
       opacity: 0.8;
     }
     .credits{
@@ -271,7 +281,7 @@ function Home(){
       margin-right: 4.5vw;
     }
     .searchTerm{
-      background-color: black;
+      background-color: #363636;
       color: white;
       border: .25vw solid white;
       width: 100%;
@@ -288,7 +298,7 @@ function Home(){
       
     }
     .location{
-      background-color: black;
+      background-color: #363636;
       color: white;
       border: .25vw solid white;
       width: 100%;
@@ -338,7 +348,7 @@ function Home(){
       border-radius: .5vw;
     }
     .startbuttontext{
-      color: black;
+      color: #363636;
       font-family: 'Open Sans';
       font-weight: 400;
       font-size: 1.66vw;
@@ -414,6 +424,7 @@ function Home(){
                 <nav>
                     <a href="/" class="navhome">Home</a>
                     <a href="/reload" class="navreload">Reload</a>
+                    <a href="/signout" class="navsignout">Signout</a>
                 </nav>
                 <h1 class="credits">credits: {credits}</h1>
             </header>
