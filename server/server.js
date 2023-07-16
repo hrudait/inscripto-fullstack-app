@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-  origin: 'https://front-qqki.onrender.com',
+  origin: ['https://front-qqki.onrender.com','https://app.localemail.app'],
   optionsSuccessStatus: 200,
   credentials: true
 }));
