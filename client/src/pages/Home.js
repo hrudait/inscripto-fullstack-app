@@ -104,13 +104,15 @@ function Home(){
 
     function incPage(){
         setPage(page+1)
-        getCurrent()
-        getFinished()
     }
+
+    useEffect(() => {
+      getCurrent();
+      getFinished();
+    }, [page]);
+
     function decPage(){
         setPage(page-1)
-        getCurrent()
-        getFinished()
     }
 
     function FinishedCsvs(){

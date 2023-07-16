@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-  origin: ['https://front-qqki.onrender.com','https://app.localemail.app'],
+  origin: ['https://front-qqki.onrender.com','https://app.localemail.app','http://localhost:3000'],
   optionsSuccessStatus: 200,
   credentials: true
 }));
@@ -227,7 +227,9 @@ app.post("/getCurrent", async(req,res)=>{
 app.post("/getFinished", async(req,res)=>{
   const doc = await User.findOne({username:req.body.username})
   const csvlist = doc.pastcsvs
+  console.log(csvlist)
   const page = parseInt(req.body.page)
+  console.log(page)
   const returnlist = []
   for (let i = (page-1)*5;i<((page-1)*5)+5;i++) {
     if(i<csvlist.length){
@@ -236,6 +238,7 @@ app.post("/getFinished", async(req,res)=>{
       returnlist.push(temp)
     }
   }
+  console.log(returnlist)
   returnlist.push(csvlist.length)
   return res.send(returnlist)
 })
