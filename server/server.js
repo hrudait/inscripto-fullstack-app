@@ -39,10 +39,10 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
+  origin: 'https://front-qqki.onrender.com/',
   optionsSuccessStatus: 200,
-  credentials:true
-
-}))
+  credentials: true
+}));
 app.use('/webhook', bodyParser.raw({type: "*/*"}))
 app.use(bodyParser.json({type: 'application/json'}))
 app.use(bodyParser.urlencoded({extended: true}))
