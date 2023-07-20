@@ -305,7 +305,7 @@ function Verify(){
             <style>
                 {css}
             </style>
-            <h1 className='phonetext'>Enter Your Phone Number For Verification<br></br> (SMS rates may apply)</h1>
+            <h1 className='phonetext'>Enter Your Phone Number For Verification (Global Format) <br></br> (SMS rates may apply, numbers only used for verification)</h1>
             <PhoneInput disabled={sent}
                 placeholder="Enter phone number"
                 value={value}
