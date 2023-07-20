@@ -426,6 +426,24 @@ function Home(){
       font-weight: 400;
       margin: 0;
       padding-left: .25vw;
+    }
+    .feedback{
+      color:white;
+      font-family: 'Open Sans';
+      font-weight: 400;
+      font-size: 1vw;
+      text-align:center;
+      margin-top: 4vw;
+    }
+    .feedbackemail{
+      color:white;
+      font-family: 'Open Sans';
+      font-weight: 400;
+      font-size: 1vw;
+      text-align:center;
+    }
+    .footer{
+      
     }`
     return(
         
@@ -465,6 +483,9 @@ function Home(){
                         <FinishedCsvs/>
                     </div>
                 </div>
+            </div>
+            <div className="footer">
+              <h1 class="feedback">Send Feedback Or Questions to <a class="feedbackemail"href = "mailto: support@localemail.app">support@localemail.app</a></h1>
             </div>
         </div>
     )
