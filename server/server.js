@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-  origin: ['https://front-qqki.onrender.com','https://app.localemail.app','http://localhost:3000'],
+  origin: ['https://front-qqki.onrender.com','https://app.localemail.app'],
   optionsSuccessStatus: 200,
   credentials: true
 }));
@@ -299,7 +299,7 @@ app.post('/checkout',async (req,res)=>{
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
-        price: "price_1NJtCVE8uhRktaazdGhAscft",
+        price: "price_1NVkLBE8uhRktaazCkgL3I4v",
         quantity: parseInt(req.body.amount),
       }
     ],
