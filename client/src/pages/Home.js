@@ -38,7 +38,7 @@ function Home(){
         })
         getCurrent()
         getFinished()
-    },[currentData])
+    },[])
 
 
     function submite(e){
@@ -69,11 +69,12 @@ function Home(){
     }
     
     function getCurrent(){
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getCurrent`,{username:user.username})
-        .then((res)=>{
-            console.log(res.data)
-            setcurrent(res.data)
-        })
+      console.log("gc")
+      axios.post(`${process.env.REACT_APP_BACKEND_URL}/getCurrent`,{username:user.username})
+      .then((res)=>{
+          console.log(res.data)
+          setcurrent(res.data)
+      })
     }
 
     function getFinished(){
