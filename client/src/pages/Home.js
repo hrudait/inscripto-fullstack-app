@@ -41,8 +41,8 @@ function Home(){
     },[currentData])
 
 
-    function submit(e){
-        e.preventDefault()
+    function submite(e){
+      console.log(e)
         if(credits===0){
             alert("Not enough credits, please reload")
         }
@@ -477,7 +477,7 @@ function Home(){
             <div class="container">
                 <div class="startandnow">
                     <div class="start">
-                        <form onSubmit={submit}>
+                        <form onSubmit={submite}>
                         <h1 class="starttext">Start a Search</h1>
                         <h2 class="searchTermtext">Search Term (one per search):</h2>
                         <input class = "searchTerm" id="searchTerm"type="text" title="searchTerm" placeholder="Ex: Restaurants, Painters, etc."  required/><br />
