@@ -42,6 +42,7 @@ function Home(){
 
 
     function submit(e){
+        e.preventDefault()
         if(credits===0){
             alert("Not enough credits, please reload")
         }
