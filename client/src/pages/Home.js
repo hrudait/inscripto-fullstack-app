@@ -128,7 +128,11 @@ function Home(){
                         <div className="finisheditem" key={csvitem.id}>
                             <p className="finishedsearchTerm">Search Term: {csvitem.name}</p>
                             <p className="finishedlocation">Location: {csvitem.location}</p>
-                            <a className="finisheddownlaod"href={csvitem.url}>CSV Download</a>
+                            {csvitem.url === "failed" ? (
+                            <p className="finisheddownlaod">Search Failed, Credit Refunded</p>
+                        ) : (
+                            <a className="finisheddownlaod" href={csvitem.url}>CSV Download</a>
+                        )}
                         </div>
                     ))
                 }

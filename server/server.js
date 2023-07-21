@@ -227,9 +227,9 @@ app.post("/getCurrent", async(req,res)=>{
 app.post("/getFinished", async(req,res)=>{
   const doc = await User.findOne({username:req.body.username})
   const csvlist = doc.pastcsvs
-  console.log(csvlist)
+  
   const page = parseInt(req.body.page)
-  console.log(page)
+ 
   const returnlist = []
   for (let i = (page-1)*5;i<((page-1)*5)+5;i++) {
     if(i<csvlist.length){
@@ -238,7 +238,7 @@ app.post("/getFinished", async(req,res)=>{
       returnlist.push(temp)
     }
   }
-  console.log(returnlist)
+ 
   returnlist.push(csvlist.length)
   return res.send(returnlist)
 })
@@ -269,8 +269,10 @@ app.post('/run', async (req,res)=>{
     try{
       await axios.post("https://rwe2cit7b7.execute-api.us-east-2.amazonaws.com/prod/runner",{"username":req.body.username,"url":url,"csvid":id})
     }catch{
+      console.log("ok")
       return res.send("ok")
     }
+    return res.send("ok")
   }
   //ok so this so far takes in a location string and searchTerm then converts it to the url to send to aws. It creates the csv document and adds the id of the csv to the 
   //User's array of csv ids
@@ -287,10 +289,13 @@ app.post('/run', async (req,res)=>{
 })
 app.post('/update',async (req,res)=>{
   await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:1,url:"https://csv-storages.s3.us-east-2.amazonaws.com/"+req.body.csvid+".csv"})
-  console.log(req.body.csvid)
-  console.log(req.body.username)
   await User.findOneAndUpdate({username:req.body.username},{$pull:{currentcsvs:req.body.csvid},$push:{pastcsvs:req.body.csvid}})
   
+  return res.send("cool")
+})
+app.post('/refund',async (req,res)=>{
+  await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:1,url:"failed"})
+  await User.findOneAndUpdate({username:req.body.username},{$pull:{currentcsvs:req.body.csvid},$inc:{remainingUses:1},$push:{pastcsvs:req.body.csvid}})
   return res.send("cool")
 })
 
@@ -329,13 +334,13 @@ app.post('/webhook', bodyParser.raw({type: 'application/json'}), async (request,
   switch (event.type) {
     case 'checkout.session.completed':
       const session = event.data.object
-      console.log(session)
+      
       const items = await stripe.checkout.sessions.listLineItems(
         session.id,
       )
-      console.log(items)
+     
       const quantity = items.data[0].quantity
-      console.log(quantity)
+     
       await User.findOneAndUpdate({customerId:session.customer},{$inc : {remainingUses:quantity}})
       break;
     // ... handle other event types
