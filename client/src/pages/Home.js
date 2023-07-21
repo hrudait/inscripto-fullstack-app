@@ -113,14 +113,7 @@ function Home(){
       getCurrent();
       getFinished();
     }, [page]);
-    useEffect(() => {
-      getCurrent();
-      getFinished();
-    }, [currentData]);
-    useEffect(() => {
-      getCurrent();
-      getFinished();
-    }, [finishedData]);
+    
     function decPage(){
         setPage(page-1)
     }
