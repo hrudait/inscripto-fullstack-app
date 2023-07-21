@@ -38,7 +38,7 @@ function Home(){
         })
         getCurrent()
         getFinished()
-    },[])
+    },[currentData])
 
 
     function submit(e){
@@ -54,10 +54,12 @@ function Home(){
                     return
                 }
             })
+            
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/run`,{username:user.username,searchTerm:e.target.elements.searchTerm.value,location:e.target.elements.location.value})
             .then(()=>{
                 getCurrent()
                 getFinished()
+                e.target.reset();
             })
         }
     }
@@ -111,7 +113,14 @@ function Home(){
       getCurrent();
       getFinished();
     }, [page]);
-
+    useEffect(() => {
+      getCurrent();
+      getFinished();
+    }, [currentData]);
+    useEffect(() => {
+      getCurrent();
+      getFinished();
+    }, [finishedData]);
     function decPage(){
         setPage(page-1)
     }
