@@ -88,6 +88,7 @@ function Home(){
     }
 
     function CurrentCsvs(){
+        console.log("eh")
         if(!currentData){
             return(<div></div>)
         }
