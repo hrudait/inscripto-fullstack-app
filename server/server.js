@@ -78,10 +78,6 @@ app.post("/sendverify", async(req,res)=>{
       username: "ACc9f7abb0037099391fff3a262b15e17c",
       password: "f4dadbc5b7b908c4e7434dd69d7d259f"
     }})
-    .catch((e)=>{
-      console.log(e)
-    })
-    return res.status(200).send("sent")
   }
   catch(e){
     console.log(e)

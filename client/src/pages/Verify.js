@@ -253,7 +253,7 @@ function Verify(){
             if(res.data==="sent"){
                 setSent(true)
             }
-            if(res.data==="al"){
+            else if(res.data==="al"){
                 alert("That Number is already in use")
             }
             else{
