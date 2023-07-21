@@ -296,6 +296,7 @@ app.post('/update',async (req,res)=>{
 app.post('/refund',async (req,res)=>{
   await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:1,url:"failed"})
   await User.findOneAndUpdate({username:req.body.username},{$pull:{currentcsvs:req.body.csvid},$inc:{remainingUses:1},$push:{pastcsvs:req.body.csvid}})
+  console.log("refund")
   return res.send("cool")
 })
 
