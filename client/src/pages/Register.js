@@ -135,6 +135,42 @@ function Register(){
     .registerbutton:hover{
       opacity: 0.8;
     }
+    @media screen and (orientation: portrait) {
+      .registertext{
+        width:90vw;
+        margin:0;
+        font-size: 10vw;
+        margin-bottom: 5vw;
+      }
+      .username{
+        height:15vw;
+        font-size: 6vw;
+      }
+      .password{
+        height:15vw;
+        font-size: 6vw;
+      }
+      .email{
+        height:15vw;
+        font-size: 6vw;
+      }
+      .login{
+        font-size: 4vw;
+        margin-top: 3vw;
+      }
+      
+      .registerbutton{
+        height:15vw;
+        margin-top: 5vw;
+        color: white;
+        background-color:white;
+      }
+      .registerbuttontext{
+        font-size: 8vw;
+        color: black;
+      }
+    
+    }
     `
     return(
         <div className='registerpage'>

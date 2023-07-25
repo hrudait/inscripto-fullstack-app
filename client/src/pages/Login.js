@@ -144,9 +144,11 @@ body{
   }
   .forgot{
     font-size: 4vw;
+    margin-top: 3vw;
   }
   .register{
     font-size: 4vw;
+    margin-top: 3vw;
   }
   .loginbutton{
     height:15vw;

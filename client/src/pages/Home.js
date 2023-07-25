@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import logo from './logo.svg'
+import menu from './hamburger.svg'
+import close from './close.svg'
 
 function Home(){
     const [credits, setcredits] = useState();
@@ -161,7 +163,10 @@ function Home(){
         };
       }
     }, [currentData]);
-
+    const [toggle,setToggle] = useState(true)
+    function toggleMenu(){
+      setToggle(!toggle)
+    }
     const css = `
     .pagechanger{
         display: flex;
@@ -203,7 +208,7 @@ function Home(){
       width: 20vw;
       margin: 0;
     }
-    .navbar{
+    .desktopnavbar{
       display: flex;
       justify-content: space-evenly;
       margin: 0;
@@ -453,6 +458,100 @@ function Home(){
     }
     .footer{
       
+    }
+    @media (orientation: landscape) {
+      .mobilenavbar {
+        display: none;
+      }
+    }
+    @media (orientation: portrait) {
+      .desktopnavbar {
+        display: none; /* This will hide the element in portrait mode */
+      }
+      .menubox{
+        display:flex;
+        margin: 0;
+      }
+      .menu{
+        width: 10vw;
+      }
+      .logo{
+        margin-left:5vw;
+        width: 70vw;
+      }
+      .credits{
+        text-align: center;
+        font-size: 7vw;
+        margin:0;
+      }
+      .menunav{
+        position:absolute;
+        top:0;
+        left:0;
+        width:80vw;
+        height:50vh;
+        background-color:black;
+      }
+      .navhome{
+        margin-left:5vw;
+        font-size:10vw;
+      }
+      .navreload{
+        margin-left:5vw;
+        font-size:10vw;
+      }
+      .navsignout{
+        margin-left:5vw;
+        font-size:10vw;
+      }
+      .close{
+        position:absolute;
+        width:10vw;
+        top:2vw;
+        left:68vw;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .startandnow {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        /* ... (other CSS rules) ... */
+      }
+      .starttext{
+        font-size:10vw;
+        margin:0;
+        text-align: center;
+      }
+      .searchTermtext{
+        font-size:5vw;
+      }
+      .searchTerm{
+        font-size:3vw;
+        height: 10vw;
+      }
+      .locationtext{
+        font-size:5vw;
+      }
+      .location{
+        font-size:3vw;
+        height: 10vw;
+      }
+      .startbutton{
+        margin-top:5vw;
+        height:10vw;
+        width: 50vw;
+      }
+      .startbuttontext{
+        margin:0;
+        font-size:5vw;
+      }
     }`
     return(
         
@@ -460,7 +559,7 @@ function Home(){
             <style>
                 {css}
             </style>
-            <header class="navbar">
+            <header class="desktopnavbar">
                 <img class ="logo"src={logo}/>
                 <nav>
                     <a href="/" class="navhome">Home</a>
@@ -468,6 +567,28 @@ function Home(){
                     <a href="/signout" class="navsignout">Signout</a>
                 </nav>
                 <h1 class="credits">credits: {credits}</h1>
+            </header>
+            <header class="mobilenavbar">
+              <div class="menubox"> 
+                <img class ="menu"src={menu} onClick={toggleMenu}/>
+                <img class ="logo"src={logo}/>
+              </div>
+                <h1 class="credits">credits: {credits}</h1>
+                {!toggle && (
+                  <div class="menunav">
+                    <img className="close" src={close} onClick={toggleMenu} />
+                    <a href="/" class="navhome">
+                      Home
+                    </a><br></br>
+                    <a href="/reload" class="navreload">
+                      Reload
+                    </a><br></br>
+                    <a href="/signout" class="navsignout">
+                      Signout
+                    </a><br></br>
+                    
+                  </div>
+                )}
             </header>
             <div class="container">
                 <div class="startandnow">
