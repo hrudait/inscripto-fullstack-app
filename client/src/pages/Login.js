@@ -151,9 +151,11 @@ body{
   .loginbutton{
     height:15vw;
     margin-top: 5vw;
+    color: white;
   }
   .loginbuttontext{
     font-size: 8vw;
+    color: black;
   }
 
 }
