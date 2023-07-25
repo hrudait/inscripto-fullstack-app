@@ -48,7 +48,7 @@ function Reload(){
     }
 
     const css = `body{
-        background-color: #363636;
+        background-color: black;
       }
       .logo{
         width: 20vw;
@@ -130,7 +130,7 @@ function Reload(){
       border-radius: .5vw;
     }
     .checkoutText{
-      color: #363636;
+      color: black;
       font-family: 'Open Sans';
       font-weight: 400;
       font-size: 3vw;
@@ -139,7 +139,7 @@ function Reload(){
       opacity: 0.8;
     }
     .inputbox{
-      background-color: #363636;
+      background-color: black;
       color: white;
       border: .25vw solid white;
       border-radius: .75vw;
@@ -186,7 +186,7 @@ function Reload(){
       margin: 0;
     }
     .packs{
-      color: #363636;
+      color: black;
       width: 15vw;
       background-color: white;
       font-family: 'Open Sans';

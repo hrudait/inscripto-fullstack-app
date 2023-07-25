@@ -33,7 +33,7 @@ function Login(){
     
   
 body{
-  background-color: #363636;
+  background-color: black;
 }
 .box{
   position: absolute;
@@ -57,7 +57,7 @@ body{
 }
 
 .username{
-  background-color: #363636;
+  background-color: black;
   color: white;
   border: .25vw solid white;
   border-radius: .75vw;
@@ -74,7 +74,7 @@ body{
   
 }
 .password{
-  background-color: #363636;
+  background-color: black;
   color: white;
   border: .25vw solid white;
   border-radius: .75vw;
@@ -119,7 +119,7 @@ body{
   border-radius: .5vw;
 }
 .loginbuttontext{
-  color: #363636;
+  color: black;
   font-family: 'Open Sans';
   font-weight: 400;
   font-size: 3vw;

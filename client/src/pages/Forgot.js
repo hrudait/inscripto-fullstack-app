@@ -5,7 +5,7 @@ function Forgot(){
     const css = `
    
     body{
-        background-color: #363636;
+        background-color: black;
     }
     .box{
         position: absolute;
@@ -53,7 +53,7 @@ function Forgot(){
         border-radius: .5vw;
       }
       .sendtext{
-        color: #363636;
+        color: black;
         font-family: 'Open Sans';
         font-weight: 400;
         font-size: 2.5vw;
@@ -74,7 +74,7 @@ function Forgot(){
         border-radius: .5vw;
       }
       .verifytext{
-        color: #363636;
+        color: black;
         font-family: 'Open Sans';
         font-weight: 400;
         font-size: 1.5vw;
@@ -100,7 +100,7 @@ function Forgot(){
         text-align: center;
       }
       .searchTerm{
-        background-color: #363636;
+        background-color: black;
         color: white;
         border: .15vw solid white;
         border-radius: .25vw;
@@ -118,7 +118,7 @@ function Forgot(){
         
       }
       .newpassword{
-        background-color: #363636;
+        background-color: black;
         color: white;
         border: .15vw solid white;
         border-radius: .25vw;

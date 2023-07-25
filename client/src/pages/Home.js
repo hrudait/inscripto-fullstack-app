@@ -197,7 +197,7 @@ function Home(){
         text-decoration: underline;
     }
     body{
-        background-color: #363636;
+        background-color: black;
       }
     .logo{
       width: 20vw;
@@ -304,7 +304,7 @@ function Home(){
       margin-right: 4.5vw;
     }
     .searchTerm{
-      background-color: #363636;
+      background-color: black;
       color: white;
       border: .25vw solid white;
       width: 100%;
@@ -321,7 +321,7 @@ function Home(){
       
     }
     .location{
-      background-color: #363636;
+      background-color: black;
       color: white;
       border: .25vw solid white;
       width: 100%;
@@ -371,7 +371,7 @@ function Home(){
       border-radius: .5vw;
     }
     .startbuttontext{
-      color: #363636;
+      color: black;
       font-family: 'Open Sans';
       font-weight: 400;
       font-size: 1.66vw;

@@ -46,7 +46,7 @@ function Verify(){
         --PhoneInputCountryFlag-backgroundColor--loading: rgba(0,0,0,0.1);
     }
     body{
-        background-color: #363636;
+        background-color: black;
     }
     .box{
         position: absolute;
@@ -67,7 +67,7 @@ function Verify(){
         width:20.5vw;
         height:5vw;
         box-sizing: border-box;
-        background-color: #363636;
+        background-color: black;
         color: white;
         border: .25vw solid white;
         border-radius: .75vw;
@@ -189,7 +189,7 @@ function Verify(){
         border-radius: .5vw;
       }
       .sendtext{
-        color: #363636;
+        color: black;
         font-family: 'Open Sans';
         font-weight: 400;
         font-size: 2.5vw;
@@ -210,7 +210,7 @@ function Verify(){
         border-radius: .5vw;
       }
       .verifytext{
-        color: #363636;
+        color: black;
         font-family: 'Open Sans';
         font-weight: 400;
         font-size: 1.5vw;
@@ -228,7 +228,7 @@ function Verify(){
         text-align: center;
       }
       .searchTerm{
-        background-color: #363636;
+        background-color: black;
         color: white;
         border: .15vw solid white;
         border-radius: .25vw;
