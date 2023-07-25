@@ -245,6 +245,73 @@ function Verify(){
         box-sizing: border-box;
         
       }
+      @media (orientation: portrait) {
+        .phonetext{
+            font-size: 6vw;
+            width: 90vw;
+        }
+        .bruh{
+            font-size: 3vw;
+        }
+        .send{
+            height: 10vw;
+            width: 70vw;
+            margin-top: 5vw;
+            background-color: white;
+        }
+        .sendtext{
+            font-size: 5vw;
+        }
+        .PhoneInput {
+            display: flex;
+            align-items: center;
+            color:white;
+        }
+        
+        .PhoneInputInput {
+            width:70vw;
+            height:10vw;
+            box-sizing: border-box;
+            background-color: black;
+            color: white;
+            border: .25vw solid white;
+            border-radius: .75vw;
+            font-size: 5vw;
+            font-family: 'Open Sans';
+            font-weight: 400;
+            margin: 0;
+            padding-left:2.5%;
+            outline-color: white;
+        }
+        
+        .PhoneInputCountryIcon {
+            width: calc(10vw * var(--PhoneInputCountryFlag-aspectRatio));
+            height: 10vw;
+            outline: .05vw solid white;
+        }
+        .searchTermtext{
+            font-size:6vw;
+            margin-top: 5vw;
+        }
+        .searchTerm{
+            height: 10vw;
+            width: 50vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            margin-top: .5vw;
+            font-size: 5vw;
+        }
+        .verify{
+            width: 30vw;
+            height: 10vw;
+            margin-top: 2vw;
+        }
+        .verifytext{
+            font-size: 5vw;
+        }
+      }
     `
 
     function sendCode(){
@@ -305,7 +372,7 @@ function Verify(){
             <style>
                 {css}
             </style>
-            <h1 className='phonetext'>Enter Your Phone Number For Verification (Global Format) <br></br> (SMS rates may apply, numbers only used for verification)</h1>
+            <h1 className='phonetext'>Enter Your Phone Number For Verification (Global Format) <br></br> <span class="bruh">(SMS rates may apply, numbers only used for verification)</span></h1>
             <PhoneInput disabled={sent}
                 placeholder="Enter phone number"
                 value={value}

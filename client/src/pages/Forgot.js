@@ -133,7 +133,6 @@ function Forgot(){
         margin-bottom: 1vw;
         outline-color: white;
         box-sizing: border-box;
-        
       }
     `
     const [sent, setSent] = useState()

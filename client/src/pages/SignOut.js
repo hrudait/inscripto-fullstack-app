@@ -51,6 +51,19 @@ function SignOut(){
       .return:hover{
         opacity: 0.8;
       }
+      @media (orientation: portrait){
+        .signedOut{
+          font-size: 10vw;
+          width: 100vw;
+        }
+        .return{
+          width: 75vw;
+          height: 10vw;
+        }
+        .returnText{
+          font-size: 5vw;
+        }
+      }
     `
     return(
         <div>
