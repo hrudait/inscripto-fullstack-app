@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import {useAuthUser, useAuthHeader} from 'react-auth-kit'
 import axios from 'axios'
 import logo from './logo.svg'
+import menu from './hamburger.svg'
+import close from './close.svg'
 function Reload(){
     const [credits, setcredits] = useState();
     const auth = useAuthUser()
@@ -46,7 +48,10 @@ function Reload(){
         event.preventDefault();
         next(parseInt(event.target.creditAmount.value))
     }
-
+    const [toggle,setToggle] = useState(true)
+    function toggleMenu(){
+      setToggle(!toggle)
+    }
     const css = `body{
         background-color: black;
       }
@@ -54,7 +59,7 @@ function Reload(){
         width: 20vw;
         margin: 0;
       }
-      .navbar{
+      .desktopnavbar{
         display: flex;
         justify-content: space-evenly;
         margin: 0;
@@ -154,6 +159,8 @@ function Reload(){
       margin-left: auto;
       margin-right: auto;
       outline-color: white;
+      padding-left:.5vw;
+      box-sizing: border-box;
     }
     .container{
       position: absolute;
@@ -199,14 +206,101 @@ function Reload(){
     }
     .packs:hover{
       opacity: 0.8;
-    }`
+    }
+    @media (orientation: landscape) {
+      .mobilenavbar {
+        display: none;
+      }
+    }
+    @media (orientation: portrait) {
+      .desktopnavbar {
+        display: none; /* This will hide the element in portrait mode */
+      }
+      .menubox{
+        display:flex;
+        margin: 0;
+      }
+      .menu{
+        width: 10vw;
+      }
+      .logo{
+        margin-left:5vw;
+        width: 70vw;
+      }
+      .credits{
+        text-align: center;
+        font-size: 7vw;
+        margin:0;
+      }
+      .menunav{
+        position:absolute;
+        top:0;
+        left:0;
+        width:80vw;
+        height:50vh;
+        background-color:black;
+      }
+      .navhome{
+        margin-left:5vw;
+        font-size:10vw;
+      }
+      .navreload{
+        margin-left:5vw;
+        font-size:10vw;
+      }
+      .navsignout{
+        margin-left:5vw;
+        font-size:10vw;
+      }
+      .close{
+        position:absolute;
+        width:10vw;
+        top:2vw;
+        left:68vw;
+      }
+      .choose{
+        width:100vw;
+        font-size:10vw;
+        margin:0;
+      }
+      .topthree, .bottomthree {
+        flex-direction: column; /* Change to column layout in portrait mode */
+        margin:0;
+      }
+      .topthree{
+        margin-top:2vw;
+      }
+      .packs{
+        width: 75vw;
+        height: 8vw;
+        margin-bottom: 2vw;
+        font-size: 5vw;
+      }
+      .customtext{
+        font-size:8vw;
+        width: 100vw;
+      }
+      .inputbox{
+        width:60vw;
+        height: 10vw;
+        font-size: 5vw;
+        padding-left:2vw;
+        box-sizing: border-box;
+      }
+      .checkout{
+        height: 10vw;
+      }
+      .checkoutText{
+        font-size: 5vw;
+      }
+    `
 
     return(
         <div>
             <style>
                 {css}
             </style>
-            <header class="navbar">
+            <header class="desktopnavbar">
                 <img class ="logo"src={logo}/>
                 <nav>
                     <a href="/" class="navhome">Home</a>
@@ -214,6 +308,28 @@ function Reload(){
                     <a href="/signout" class="navsignout">Signout</a>
                 </nav>
                 <h1 class="credits">credits: {credits}</h1>
+            </header>
+            <header class="mobilenavbar">
+              <div class="menubox"> 
+                <img class ="menu"src={menu} onClick={toggleMenu}/>
+                <img class ="logo"src={logo}/>
+              </div>
+                <h1 class="credits">credits: {credits}</h1>
+                {!toggle && (
+                  <div class="menunav">
+                    <img className="close" src={close} onClick={toggleMenu} />
+                    <a href="/" class="navhome">
+                      Home
+                    </a><br></br>
+                    <a href="/reload" class="navreload">
+                      Reload
+                    </a><br></br>
+                    <a href="/signout" class="navsignout">
+                      Signout
+                    </a><br></br>
+                    
+                  </div>
+                )}
             </header>
             <div>
                 <div className="container">

@@ -528,6 +528,7 @@ function Home(){
         font-size:10vw;
         margin:0;
         text-align: center;
+        margin-bottom: 2vw;
       }
       .searchTermtext{
         font-size:5vw;
@@ -551,6 +552,56 @@ function Home(){
       .startbuttontext{
         margin:0;
         font-size:5vw;
+      }
+      .runningnow{
+        font-size: 8vw;
+        text-align: center;
+        margin:0;
+      }
+      .finishedtext{
+        font-size: 8vw;
+        text-align: center;
+        margin:0;
+      }
+      .feedback{
+        font-size:3vw;
+      }
+      .feedbackemail{
+        font-size:3vw;
+      }
+      .pagenum{
+        font-size:5vw;
+      }
+      .lefta{
+        font-size:5vw;
+      }
+      .righta{
+        font-size:5vw;
+      }
+      .finisheditem{
+        width:80vw;
+        height: 13vw;
+        margin-top:2vw;
+      }
+      .currentitem{
+        width:80vw;
+        height: 15vw;
+        margin-top:2vw;
+      }
+      .currentsearchTerm{
+        font-size:5vw;
+      }
+      .currentlocation{
+        font-size:5vw;
+      }
+      .finishedsearchTerm{
+        font-size:3vw;
+      }
+      .finishedlocation{
+        font-size:3vw;
+      }
+      .finisheddownlaod{
+        font-size:3vw;
       }
     }`
     return(
