@@ -127,6 +127,36 @@ body{
 .loginbutton:hover{
   opacity: 0.8;
 }
+@media screen and (orientation: portrait) {
+  .welcome{
+    width:90vw;
+    margin:0;
+    font-size: 10vw;
+    margin-bottom: 5vw;
+  }
+  .username{
+    height:15vw;
+    font-size: 6vw;
+  }
+  .password{
+    height:15vw;
+    font-size: 6vw;
+  }
+  .forgot{
+    font-size: 4vw;
+  }
+  .register{
+    font-size: 4vw;
+  }
+  .loginbutton{
+    height:15vw;
+    margin-top: 5vw;
+  }
+  .loginbuttontext{
+    font-size: 8vw;
+  }
+
+}
     `
     return(
       <div className='loginpage'>
