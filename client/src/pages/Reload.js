@@ -133,9 +133,11 @@ function Reload(){
       height: 5vw;
       border: 0;
       border-radius: .5vw;
+      background-color:white;
     }
     .checkoutText{
       color: black;
+
       font-family: 'Open Sans';
       font-weight: 400;
       font-size: 3vw;
@@ -232,13 +234,14 @@ function Reload(){
         font-size: 7vw;
         margin:0;
       }
-      .menunav{
-        position:absolute;
-        top:0;
-        left:0;
-        width:80vw;
-        height:50vh;
-        background-color:black;
+      .menunav {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 80vw;
+        height: 50vh;
+        background-color: black;
+        z-index: 2; /* Ensure the menunav appears above other elements */
       }
       .navhome{
         margin-left:5vw;
