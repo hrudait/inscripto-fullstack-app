@@ -57,6 +57,7 @@ function SignOut(){
         .return{
           width: 75vw;
           height: 10vw;
+          background-color:white;
         }
         .returnText{
           font-size: 5vw;

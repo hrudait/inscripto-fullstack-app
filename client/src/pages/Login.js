@@ -24,7 +24,7 @@ function Login(){
                 alert("The password does not match the username");
             }
             else{
-                signIn({token:response.data,authState:{username:e.target.elements.username.value},expiresIn:43200})
+                signIn({token:response.data,authState:{username:e.target.elements.username.value.toLowerCase()},expiresIn:43200})
                 window.location.href = "/"
             }
         }))

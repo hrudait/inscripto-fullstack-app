@@ -307,6 +307,7 @@ function Verify(){
             width: 30vw;
             height: 10vw;
             margin-top: 2vw;
+            background-color:white;
         }
         .verifytext{
             font-size: 5vw;

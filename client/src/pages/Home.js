@@ -548,6 +548,7 @@ function Home(){
         margin-top:5vw;
         height:10vw;
         width: 50vw;
+        background-color:white;
       }
       .startbuttontext{
         margin:0;

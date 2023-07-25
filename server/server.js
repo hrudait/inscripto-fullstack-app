@@ -55,7 +55,8 @@ app.use(session({
 app.use(cookieParser("UzLz!sJym8Zt@3XP"))
 
 app.post("/login" , async (req,res)=>{
-  const doc = await User.findOne({username: req.body.username})
+  const username = req.body.username.toLowerCase()
+  const doc = await User.findOne({username: username})
   if(!doc) {
     res.send("DNE")
   }else{
@@ -63,7 +64,7 @@ app.post("/login" , async (req,res)=>{
     if(!check){
       res.send("wrong")
     }else{
-      res.send(await jwt.sign(req.body.username,"UzLz!sJym8Zt@3XP"))
+      res.send(await jwt.sign(username,"UzLz!sJym8Zt@3XP"))
     }
   }
 })
@@ -106,9 +107,10 @@ app.post("/verifycode", async(req,res)=>{
   }
 })
 app.post("/sendforgot", async(req,res)=>{
-  const check = await User.exists({email:req.body.email})
+  const email = req.body.email.toLowerCase()
+  const check = await User.exists({email:email})
   if(check){ 
-    const user = await User.findOne({email:req.body.email})
+    const user = await User.findOne({email:email})
     try{
       await axios.post("https://verify.twilio.com/v2/Services/VA1f7341b36346d0225b05a3976ddb0370/Verifications",qs.stringify({'To': user.phoneNumber, 'Channel': 'sms'}),{auth: {
         username: "ACc9f7abb0037099391fff3a262b15e17c",
@@ -126,16 +128,17 @@ app.post("/sendforgot", async(req,res)=>{
   
 })
 app.post("/verifyforgot", async(req,res)=>{
-  const check = await User.exists({email:req.body.email})
+  const email = req.body.email.toLowerCase()
+  const check = await User.exists({email:email})
   if(check){
-    const user = await User.findOne({email:req.body.email})
+    const user = await User.findOne({email:email})
     try{  
       const stat = await axios.post("https://verify.twilio.com/v2/Services/VA1f7341b36346d0225b05a3976ddb0370/VerificationCheck",qs.stringify({'To': user.phoneNumber, 'Code': req.body.code}),{auth: {
         username: "ACc9f7abb0037099391fff3a262b15e17c",
         password: "f4dadbc5b7b908c4e7434dd69d7d259f"
       }})
       if(stat.data.status==="approved"){
-        await User.findOneAndUpdate({email:req.body.email},{password:await bcrypt.hash(req.body.newpassword,10)})
+        await User.findOneAndUpdate({email:email},{password:await bcrypt.hash(req.body.newpassword,10)})
       }
     }
     catch(e){
@@ -150,16 +153,18 @@ app.post("/verifyforgot", async(req,res)=>{
 })
 
 app.post("/register" , async (req,res)=>{
-  const doc = await User.findOne({email: req.body.email})
+  const username = req.body.username.toLowerCase()
+  const email =req.body.email.toLowerCase()
+  const doc = await User.findOne({email:email})
   if(doc) return res.send("Email already in use")
-  const d = await User.findOne({username: req.body.username})
+  const d = await User.findOne({username: username})
   if(d) return res.send("Choose a different username")
   if(!d){
     const customer = await stripe.customers.create();
     const newUser = new User({
-      username: req.body.username,
+      username: username,
       password: await bcrypt.hash(req.body.password,10),
-      email: req.body.email,
+      email: email,
       remainingUses: 0,
       startDate: -1,
 

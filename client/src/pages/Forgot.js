@@ -134,6 +134,51 @@ function Forgot(){
         outline-color: white;
         box-sizing: border-box;
       }
+      @media (orientation: portrait){
+        .t1{
+          font-size: 8vw;
+          width: 90vw;
+        }
+        .t2{
+          font-size: 5vw;
+        }
+        .t3{
+          font-size: 3vw;
+          margin-bottom: 2vw;
+        }
+        .searchTerm{
+          height: 10vw;
+          font-size: 5vw;
+        }
+        .send{
+          width: 50vw;
+          height: 10vw;
+          background-color: white;
+        }
+        .sendtext{
+          font-size: 5vw;
+        }
+        .searchTermtext{
+          font-size: 5vw;
+          margin-top: 5vw;
+        }
+        .newpassword{
+          height: 10vw;
+          font-size: 5vw;
+        }
+        .passwordtext{
+          font-size: 5vw;
+          margin-top: 2vw;
+        }
+        .verify{
+          height: 10vw;
+          width: 50vw;
+          background-color:white;
+        }
+        .verifytext{
+          font-size: 5vw;
+        }
+      }
     `
     const [sent, setSent] = useState()
     const [value, setValue] = useState()
