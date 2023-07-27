@@ -616,6 +616,7 @@ function Home(){
                 <nav>
                     <a href="/" class="navhome">Home</a>
                     <a href="/reload" class="navreload">Reload</a>
+                    <a href="https://youtu.be/OwvdhqWKS9U" class="navreload">Tutorial</a>
                     <a href="/signout" class="navsignout">Signout</a>
                 </nav>
                 <h1 class="credits">credits: {credits}</h1>
@@ -634,6 +635,9 @@ function Home(){
                     </a><br></br>
                     <a href="/reload" class="navreload">
                       Reload
+                    </a><br></br>
+                    <a href="https://youtu.be/OwvdhqWKS9U" class="navreload">
+                      Tutorial
                     </a><br></br>
                     <a href="/signout" class="navsignout">
                       Signout
