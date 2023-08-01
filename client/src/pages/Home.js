@@ -611,67 +611,67 @@ function Home(){
             <style>
                 {css}
             </style>
-            <header class="desktopnavbar">
+            <header className="desktopnavbar">
                 <img class ="logo"src={logo}/>
                 <nav>
-                    <a href="/" class="navhome">Home</a>
-                    <a href="/reload" class="navreload">Reload</a>
-                    <a href="https://youtu.be/OwvdhqWKS9U" class="navreload">Tutorial</a>
-                    <a href="/signout" class="navsignout">Signout</a>
+                    <a href="/" className="navhome">Home</a>
+                    <a href="/reload" className="navreload">Reload</a>
+                    <a href="https://youtu.be/OwvdhqWKS9U" className="navreload">Tutorial</a>
+                    <a href="/signout" className="navsignout">Signout</a>
                 </nav>
-                <h1 class="credits">credits: {credits}</h1>
+                <h1 className="credits">credits: {credits}</h1>
             </header>
-            <header class="mobilenavbar">
-              <div class="menubox"> 
+            <header className="mobilenavbar">
+              <div className="menubox"> 
                 <img class ="menu"src={menu} onClick={toggleMenu}/>
                 <img class ="logo"src={logo}/>
               </div>
-                <h1 class="credits">credits: {credits}</h1>
+                <h1 className="credits">credits: {credits}</h1>
                 {!toggle && (
-                  <div class="menunav">
+                  <div className="menunav">
                     <img className="close" src={close} onClick={toggleMenu} />
-                    <a href="/" class="navhome">
+                    <a href="/" className="navhome">
                       Home
                     </a><br></br>
-                    <a href="/reload" class="navreload">
+                    <a href="/reload" className="navreload">
                       Reload
                     </a><br></br>
-                    <a href="https://youtu.be/OwvdhqWKS9U" class="navreload">
+                    <a href="https://youtu.be/OwvdhqWKS9U" className="navreload">
                       Tutorial
                     </a><br></br>
-                    <a href="/signout" class="navsignout">
+                    <a href="/signout" className="navsignout">
                       Signout
                     </a><br></br>
                     
                   </div>
                 )}
             </header>
-            <div class="container">
-                <div class="startandnow">
-                    <div class="start">
+            <div className="container">
+                <div className="startandnow">
+                    <div className="start">
                         <form action="" onSubmit={submite}>
-                        <h1 class="starttext">Start a Search</h1>
-                        <h2 class="searchTermtext">Search Term (one per search):</h2>
+                        <h1 className="starttext">Start a Search</h1>
+                        <h2 className="searchTermtext">Search Term (one per search):</h2>
                         <input class = "searchTerm" id="searchTerm"type="text" title="searchTerm" placeholder="Ex: Restaurants, Painters, etc."  required/><br />
-                        <h2 class="locationtext">Location:</h2>
+                        <h2 className="locationtext">Location:</h2>
                         <input class = "location" id="location" type="text" title="location" placeholder="Format: Street(Optional), City, State, Country"  required/><br />
-                        <button class = 'startbutton' type="submit"><span class="startbuttontext">start</span></button>
+                        <button class = 'startbutton' type="submit"><span className="startbuttontext">start</span></button>
                         </form>
                     </div>
-                    <div class="current">
-                        <h1 class="runningnow">Running Now (Limit 5)</h1>
+                    <div className="current">
+                        <h1 className="runningnow">Running Now (Limit 5)</h1>
                         <CurrentCsvs/>
                     </div>
                 </div>
-                <div class="finishedbox">
-                    <div class="finished">
-                        <h1 class="finishedtext">Finished Runs</h1>
+                <div className="finishedbox">
+                    <div className="finished">
+                        <h1 className="finishedtext">Finished Runs</h1>
                         <FinishedCsvs/>
                     </div>
                 </div>
             </div>
             <div className="footer">
-              <h1 class="feedback">Send Feedback Or Questions to <a class="feedbackemail"href = "mailto: support@localemail.app">support@localemail.app</a></h1>
+              <h1 className="feedback">Send Feedback Or Questions to <a className="feedbackemail"href = "mailto: support@localemail.app">support@localemail.app</a></h1>
             </div>
         </div>
     )

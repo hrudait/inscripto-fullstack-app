@@ -303,33 +303,33 @@ function Reload(){
             <style>
                 {css}
             </style>
-            <header class="desktopnavbar">
+            <header className="desktopnavbar">
                 <img class ="logo"src={logo}/>
                 <nav>
-                    <a href="/" class="navhome">Home</a>
-                    <a href="/reload" class="navreload">Reload</a>
-                    <a href="https://youtu.be/OwvdhqWKS9U" class="navreload">Tutorial</a>
-                    <a href="/signout" class="navsignout">Signout</a>
+                    <a href="/" className="navhome">Home</a>
+                    <a href="/reload" className="navreload">Reload</a>
+                    <a href="https://youtu.be/OwvdhqWKS9U" className="navreload">Tutorial</a>
+                    <a href="/signout" className="navsignout">Signout</a>
                 </nav>
-                <h1 class="credits">credits: {credits}</h1>
+                <h1 className="credits">credits: {credits}</h1>
             </header>
-            <header class="mobilenavbar">
-              <div class="menubox"> 
+            <header className="mobilenavbar">
+              <div className="menubox"> 
                 <img class ="menu"src={menu} onClick={toggleMenu}/>
                 <img class ="logo"src={logo}/>
               </div>
-                <h1 class="credits">credits: {credits}</h1>
+                <h1 className="credits">credits: {credits}</h1>
                 {!toggle && (
-                  <div class="menunav">
+                  <div className="menunav">
                     <img className="close" src={close} onClick={toggleMenu} />
-                    <a href="/" class="navhome">
+                    <a href="/" className="navhome">
                       Home
                     </a><br></br>
-                    <a href="/reload" class="navreload">
+                    <a href="/reload" className="navreload">
                       Reload
                     </a><br></br>
-                    <a href="https://youtu.be/OwvdhqWKS9U" class="navreload">Tutorial</a><br></br>
-                    <a href="/signout" class="navsignout">
+                    <a href="https://youtu.be/OwvdhqWKS9U" className="navreload">Tutorial</a><br></br>
+                    <a href="/signout" className="navsignout">
                       Signout
                     </a><br></br>
                     

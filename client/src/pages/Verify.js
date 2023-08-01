@@ -346,7 +346,7 @@ function Verify(){
             return(<div></div>)
         }
         return(<div>
-            <h2 class="searchTermtext">Enter The Code You Received</h2>
+            <h2 className="searchTermtext">Enter The Code You Received</h2>
             <form onSubmit={verifyCode}>
                 <input class = "searchTerm" id="searchTerm" onInput={handleChange} type="number" title="searchTerm" placeholder="123456"  required/><br />
                 <button type="submit" className='verify'><span className='verifytext'>Verify</span></button>
@@ -373,7 +373,7 @@ function Verify(){
             <style>
                 {css}
             </style>
-            <h1 className='phonetext'>Enter Your Phone Number For Verification (Global Format) <br></br> <span class="bruh">(SMS rates may apply, numbers only used for verification)</span></h1>
+            <h1 className='phonetext'>Enter Your Phone Number For Verification (Global Format) <br></br> <span className="bruh">(SMS rates may apply, numbers only used for verification)</span></h1>
             <PhoneInput disabled={sent}
                 placeholder="Enter phone number"
                 value={value}
