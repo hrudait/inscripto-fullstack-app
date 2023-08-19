@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-  origin: ['https://front-qqki.onrender.com','https://app.localemail.app'],
+  origin: ['https://front-qqki.onrender.com','https://app.localemail.app','https://app.inscripto.app'],
   optionsSuccessStatus: 200,
   credentials: true
 }));
@@ -308,7 +308,7 @@ app.post('/run', async (req,res)=>{
   //make the frontend look nice and work
 })
 app.post('/finish',async (req,res)=>{
-  await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:4,url:req.body.url})
+  await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:4,url:req.body.downloadUrl})
   await User.findOneAndUpdate({username:req.body.username},{$pull:{currentcsvs:req.body.csvid},$push:{pastcsvs:req.body.csvid}})
   return res.send("cool")
 })
