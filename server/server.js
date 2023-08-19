@@ -14,6 +14,7 @@ const user = require('./user');
 const app = express();
 const stripe = require('stripe')('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')
 const qs = require('qs')
+const {connect} = require('amqplib')
 
 const port = process.env.PORT || 5000
 app.listen(port)
@@ -248,6 +249,19 @@ app.post("/getFinished", async(req,res)=>{
   return res.send(returnlist)
 })
 
+//setup for sending message to rabbitmq
+let connection;
+let channel;
+//connect to the queue
+async function setupRabbitMQ(){
+  connection = await connect("amqp://admin:password@66.29.131.229:5672")
+  channel = await connection.createChannel()
+  await channel.assertQueue('tasks',{durable:true,arguments:{'x-queue-type':'classic'}})
+}
+
+setupRabbitMQ()
+
+//change it to add item to queue
 app.post('/run', async (req,res)=>{
   const doc = await User.findOne({username:req.body.username})
   if(!doc) return res.send("fail")
@@ -272,7 +286,8 @@ app.post('/run', async (req,res)=>{
       { $push: { currentcsvs: id },remainingUses:doc.remainingUses-1}
     );
     try{
-      await axios.post("https://rwe2cit7b7.execute-api.us-east-2.amazonaws.com/prod/runner",{"username":req.body.username,"url":url,"csvid":id})
+      const queueItem = url+"12%%2552%%12"+id
+      await channel.sendToQueue('tasks',Buffer.from(queueItem))
     }catch{
       console.log("ok")
       return res.send("ok")
@@ -292,14 +307,19 @@ app.post('/run', async (req,res)=>{
   //make the aws function use just one fifoqueue with the filename we generate as the groupid, change the ender to reflect these changes
   //make the frontend look nice and work
 })
-app.post('/update',async (req,res)=>{
-  await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:1,url:"https://csv-storages.s3.us-east-2.amazonaws.com/"+req.body.csvid+".csv"})
+app.post('/finish',async (req,res)=>{
+  await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:4,url:req.body.url})
   await User.findOneAndUpdate({username:req.body.username},{$pull:{currentcsvs:req.body.csvid},$push:{pastcsvs:req.body.csvid}})
-  
   return res.send("cool")
 })
+
+app.post('/update',async (req,res)=>{
+  await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{$inc:{status:1}})  
+  return res.send("cool")
+})
+
 app.post('/refund',async (req,res)=>{
-  await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:1,url:"failed"})
+  await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:-1,url:"failed"})
   await User.findOneAndUpdate({username:req.body.username},{$pull:{currentcsvs:req.body.csvid},$inc:{remainingUses:1},$push:{pastcsvs:req.body.csvid}})
   console.log("refund")
   return res.send("cool")
