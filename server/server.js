@@ -286,7 +286,7 @@ app.post('/run', async (req,res)=>{
       { $push: { currentcsvs: id },remainingUses:doc.remainingUses-1}
     );
     try{
-      const queueItem = url+"12%%2552%%12"+id
+      const queueItem = url+"12%%2552%%12"+id+"12%%2552%%12"+req.body.username
       await channel.sendToQueue('tasks',Buffer.from(queueItem))
     }catch{
       console.log("ok")
