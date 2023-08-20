@@ -84,7 +84,16 @@ function Home(){
         .then((res)=>{
             console.log(res.data)
             const list = res.data
-            setMaxPages(Math.floor((list.pop())/6)+1)
+            const numOfCsvs = list.pop()
+            if(numOfCsvs==0){
+              setMaxPages(1)
+            }
+            else if(numOfCsvs%5==0){
+              setMaxPages(Math.floor(numOfCsvs/5))
+            }
+            else{
+              setMaxPages(Math.floor(numOfCsvs/5)+1)
+            }
             console.log(list)
             setfinished(list)
         })
@@ -650,12 +659,12 @@ function Home(){
                 <div className="startandnow">
                     <div className="start">
                         <form action="" onSubmit={submite}>
-                        <h1 className="starttext">Start a Search</h1>
-                        <h2 className="searchTermtext">Search Term (one per search):</h2>
-                        <input class = "searchTerm" id="searchTerm"type="text" title="searchTerm" placeholder="Ex: Restaurants, Painters, etc."  required/><br />
-                        <h2 className="locationtext">Location:</h2>
-                        <input class = "location" id="location" type="text" title="location" placeholder="Format: Street(Optional), City, State, Country"  required/><br />
-                        <button class = 'startbutton' type="submit"><span className="startbuttontext">start</span></button>
+                          <h1 className="starttext">Start a Search</h1>
+                          <h2 className="searchTermtext">Search Term (one per search):</h2>
+                          <input class = "searchTerm" id="searchTerm"type="text" title="searchTerm" placeholder="Ex: Restaurants, Painters, etc."  required/><br />
+                          <h2 className="locationtext">Location:</h2>
+                          <input class = "location" id="location" type="text" title="location" placeholder="Format: Street(Optional), City, State, Country"  required/><br />
+                          <button class = 'startbutton' type="submit"><span className="startbuttontext">start</span></button>
                         </form>
                     </div>
                     <div className="current">
