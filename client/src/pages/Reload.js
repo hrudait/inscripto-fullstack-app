@@ -1,28 +1,20 @@
 import { useEffect, useState } from "react"
-import {useAuthUser, useAuthHeader} from 'react-auth-kit'
 import axios from 'axios'
-import logo from './logo.svg'
-import menu from './hamburger.svg'
-import close from './close.svg'
+import logo from '../images/logo.svg'
+import menu from '../images/hamburger.svg'
+import close from '../images/close.svg'
+import { auth } from "./firebase"
 function Reload(){
     const [credits, setcredits] = useState();
-    const auth = useAuthUser()
-    const authHeader = useAuthHeader()
-    const user = auth()
+    
+    auth.onAuthStateChanged((user)=>{
+      if(!user){
+        window.location.href ='/login'
+      }
+    })
+
     useEffect(()=>{
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth`,{headers:{"authorization":authHeader().substring(10)}})
-        .then((res)=>{
-            if(!(res.data===user.username)){
-                window.location.href = "/signout" 
-            }
-        })
-        .catch((e)=>{            
-            window.location.href = "/signout"           
-        })
-    },[])
-    //get the user credits
-    useEffect(()=>{
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`,{username:user.username})
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`,{email:auth.currentUser.email})
         .then((res)=>{
             setcredits(res.data.credits)
         })
@@ -38,7 +30,7 @@ function Reload(){
         event.target.value = value;
     }
     function next(number){
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/checkout`,{username:user.username,amount:number})
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/checkout`,{email:auth.currentUser.email,amount:number})
         .then((res)=>{
             window.location = res.data
         })

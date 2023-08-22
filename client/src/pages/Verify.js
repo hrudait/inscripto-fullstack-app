@@ -3,27 +3,14 @@ import { useAuthHeader, useAuthUser } from "react-auth-kit";
 import { useEffect, useState } from "react";
 
 import PhoneInput from 'react-phone-number-input'
+import { auth } from './firebase';
 function Verify(){
-    const authHeader = useAuthHeader()
-    const authUser = useAuthUser()
-    const user = authUser()
     //check auth
-    useEffect(()=>{
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth`,{headers:{"authorization":authHeader().substring(10)}})
-        .then((res)=>{
-            if(!(res.data===authUser().username)){
-                if(!(res.data==="verify")){
-                    window.location.href = "/signout" 
-                }
-            }
-            else{
-                window.location.href = "/"
-            }
-        })
-        .catch((e)=>{            
-            window.location.href = "/signout"           
-        })
-    },[])
+    auth.onAuthStateChanged((user)=>{
+        if(!user){
+          window.location.href ='/login'
+        }
+      })
 
     const css = `
     :root {
@@ -316,7 +303,7 @@ function Verify(){
     `
 
     function sendCode(){
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/sendverify`,{username:user.username,phone:value})
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/sendverify`,{email:auth.currentUser.email,phone:value})
         .then((res)=>{
             if(res.data==="sent"){
                 setSent(true)
@@ -331,7 +318,7 @@ function Verify(){
     }
     function verifyCode(e){
         e.preventDefault()
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/verifycode`,{username:user.username,phone:value,code:e.target.elements.searchTerm.value})
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/verifycode`,{email:auth.currentUser.email,phone:value,code:e.target.elements.searchTerm.value})
         .then((res)=>{
             if(res.data==="verified"){
                 window.location.href="/"

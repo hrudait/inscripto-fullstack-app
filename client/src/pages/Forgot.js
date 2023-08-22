@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import axios from 'axios'
+import { auth } from "./firebase"
 
 function Forgot(){
     const css = `
@@ -215,6 +216,7 @@ function Forgot(){
     function login(){
         window.location.href = "/login"
     }
+
     return(
         <div className='box'>
             <style>

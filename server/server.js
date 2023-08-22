@@ -3,14 +3,10 @@ const axios = require('axios')
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose') 
-const cookieParser = require('cookie-parser')
 const bcrypt = require('bcryptjs')
-const session = require('express-session')
 const bodyParser = require('body-parser')
-const jwt = require('jsonwebtoken')
 const User = require('./user');
 const csv = require('./csv');
-const user = require('./user');
 const app = express();
 const stripe = require('stripe')('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')
 const qs = require('qs')
@@ -47,28 +43,8 @@ app.use(cors({
 app.use('/webhook', bodyParser.raw({type: "*/*"}))
 app.use(bodyParser.json({type: 'application/json'}))
 app.use(bodyParser.urlencoded({extended: true}))
-app.use(session({
-  secret:"UzLz!sJym8Zt@3XP",
-  resave: true,
-  saveUninitialized: true
-}))
 
-app.use(cookieParser("UzLz!sJym8Zt@3XP"))
 
-app.post("/login" , async (req,res)=>{
-  const username = req.body.username.toLowerCase()
-  const doc = await User.findOne({username: username})
-  if(!doc) {
-    res.send("DNE")
-  }else{
-    const check = await bcrypt.compare(req.body.password,doc.password)
-    if(!check){
-      res.send("wrong")
-    }else{
-      res.send(await jwt.sign(username,"UzLz!sJym8Zt@3XP"))
-    }
-  }
-})
 
 app.post("/sendverify", async(req,res)=>{
   const check = await User.exists({phoneNumber:req.body.phone})
@@ -87,6 +63,7 @@ app.post("/sendverify", async(req,res)=>{
   }
   return res.status(200).send("sent")
 })
+
 app.post("/verifycode", async(req,res)=>{
   try{
     
@@ -96,7 +73,7 @@ app.post("/verifycode", async(req,res)=>{
     }})
     if(stat.data.status==="approved"){
       res.status(200).send("verified")
-      await User.findOneAndUpdate({username:req.body.username},{phoneNumber:req.body.phone,phoneVerified:true,remainingUses:5})
+      await User.findOneAndUpdate({email:req.body.email},{phoneNumber:req.body.phone,phoneVerified:true,remainingUses:5})
     }
     else{
       res.status(200).send("fail")
@@ -107,6 +84,7 @@ app.post("/verifycode", async(req,res)=>{
     return res.status(200).send("fail")
   }
 })
+
 app.post("/sendforgot", async(req,res)=>{
   const email = req.body.email.toLowerCase()
   const check = await User.exists({email:email})
@@ -125,9 +103,9 @@ app.post("/sendforgot", async(req,res)=>{
   }
   else{
     return res.status(200).send("ok")
-  }
-  
+  } 
 })
+
 app.post("/verifyforgot", async(req,res)=>{
   const email = req.body.email.toLowerCase()
   const check = await User.exists({email:email})
@@ -150,63 +128,32 @@ app.post("/verifyforgot", async(req,res)=>{
   else{
     return res.status(200).send("ok")
   }
-
 })
 
-app.post("/register" , async (req,res)=>{
-  const username = req.body.username.toLowerCase()
-  const email =req.body.email.toLowerCase()
-  const doc = await User.findOne({email:email})
-  if(doc) return res.send("Email already in use")
-  const d = await User.findOne({username: username})
-  if(d) return res.send("Choose a different username")
-  if(!d){
-    const customer = await stripe.customers.create();
-    const newUser = new User({
-      username: username,
-      password: await bcrypt.hash(req.body.password,10),
-      email: email,
-      remainingUses: 0,
-      startDate: -1,
+app.post("/createUser" , async (req,res)=>{
+  const customer = await stripe.customers.create();
+  const newUser = new User({
+    email: req.body.email,
+    remainingUses: 0,
+    phoneVerified: false,
+    phoneNumber: "",
+    customerId: customer.id,
+  })
+  await newUser.save()
+  return res.send("worked")
+})
 
-      phoneVerified: false,
-      phoneNumber: "",
-      customerId: customer.id,
-    })
-    await newUser.save()
-    return res.send("/login")
-  }
-})
-app.get("/auth", async(req,res)=>{
-  try{
-    const username = jwt.verify(req.headers.authorization,"UzLz!sJym8Zt@3XP")
-    const user = await User.exists({username:username})
-    if(!user){
-      res.status(400).send("invalid token") 
-    }else{
-      const useritem = await User.findOne({username:username})
-      if(useritem.phoneVerified===false){
-        res.status(200).send("verify")
-      }
-      else{
-        res.status(200).send(username)
-      }
-    }
-  }catch(e){ 
-    res.status(400)
-    res.send("invalid token") 
-  }
-})
 
 app.post('/getUser', async(req,res)=>{
-  const user = await User.findOne({username:req.body.username})
+  const user = await User.findOne({email:req.body.email})
   if(!user){
     return res.status(400)
   }
-  return res.send({credits:user.remainingUses,emailVerified:user.emailVerified,customerId:user.customerId})
+  return res.send({credits:user.remainingUses,phoneVerified:user.phoneVerified,customerId:user.customerId})
 })
+
 app.post('/getCurrentCsvAmount', async(req,res)=>{
-  const doc = await User.findOne({username:req.body.username})
+  const doc = await User.findOne({email:req.body.email})
   if(doc){
     return res.send(doc.currentcsvs.length);
   }
@@ -216,7 +163,7 @@ app.post('/getCurrentCsvAmount', async(req,res)=>{
 })
 
 app.post("/getCurrent", async(req,res)=>{
-  const doc = await User.findOne({username:req.body.username})
+  const doc = await User.findOne({email:req.body.email})
   const csvlist = doc.currentcsvs
   const returnlist = []
   for (const csve of csvlist) {
@@ -231,7 +178,7 @@ app.post("/getCurrent", async(req,res)=>{
 })
 
 app.post("/getFinished", async(req,res)=>{
-  const doc = await User.findOne({username:req.body.username})
+  const doc = await User.findOne({email:req.body.email})
   const csvlist = doc.pastcsvs
   
   const page = parseInt(req.body.page)
@@ -263,7 +210,7 @@ setupRabbitMQ()
 
 //change it to add item to queue
 app.post('/run', async (req,res)=>{
-  const doc = await User.findOne({username:req.body.username})
+  const doc = await User.findOne({email:req.body.email})
   if(!doc) return res.send("fail")
   if(doc.remainingUses<=0){
     return res.send("fail")
@@ -282,11 +229,11 @@ app.post('/run', async (req,res)=>{
     await newCSV.save();
     const id = newCSV._id
     await User.findOneAndUpdate(
-      { username: req.body.username }, 
+      { email: req.body.email }, 
       { $push: { currentcsvs: id },remainingUses:doc.remainingUses-1}
     );
     try{
-      const queueItem = url+"12%%2552%%12"+id+"12%%2552%%12"+req.body.username
+      const queueItem = url+"12%%2552%%12"+id+"12%%2552%%12"+req.body.email
       await channel.sendToQueue('tasks',Buffer.from(queueItem))
     }catch{
       console.log("ok")
@@ -309,7 +256,7 @@ app.post('/run', async (req,res)=>{
 })
 app.post('/finish',async (req,res)=>{
   await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:4,url:req.body.downloadUrl})
-  await User.findOneAndUpdate({username:req.body.username},{$pull:{currentcsvs:req.body.csvid},$push:{pastcsvs:req.body.csvid}})
+  await User.findOneAndUpdate({email:req.body.email},{$pull:{currentcsvs:req.body.csvid},$push:{pastcsvs:req.body.csvid}})
   return res.send("cool")
 })
 
@@ -320,13 +267,13 @@ app.post('/update',async (req,res)=>{
 
 app.post('/refund',async (req,res)=>{
   await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:-1,url:"failed"})
-  await User.findOneAndUpdate({username:req.body.username},{$pull:{currentcsvs:req.body.csvid},$inc:{remainingUses:1},$push:{pastcsvs:req.body.csvid}})
+  await User.findOneAndUpdate({email:req.body.email},{$pull:{currentcsvs:req.body.csvid},$inc:{remainingUses:1},$push:{pastcsvs:req.body.csvid}})
   console.log("refund")
   return res.send("cool")
 })
 
 app.post('/checkout',async (req,res)=>{
-  const doc = await User.findOne({username:req.body.username})
+  const doc = await User.findOne({email:req.body.email})
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {

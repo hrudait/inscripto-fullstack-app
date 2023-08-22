@@ -1,8 +1,11 @@
 import { useSignOut } from "react-auth-kit";
+import { auth } from "./firebase";
 
 function SignOut(){
-    const signOut = useSignOut()
-    signOut()
+    async function logout(){
+      await auth.signOut()
+    }
+    logout()
     function login(){
         window.location.href = '/login'
     }

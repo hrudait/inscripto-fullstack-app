@@ -1,32 +1,19 @@
 import axios from 'axios'
-import {useIsAuthenticated} from 'react-auth-kit'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { auth } from './firebase'
 function Register(){
-    const isAuthenticated = useIsAuthenticated()
-    if(isAuthenticated()){
-        window.location.href = "/"
-    }
+    
     function submit(e) {
         e.preventDefault()
-        axios({
-            method:"POST",
-            url:`${process.env.REACT_APP_BACKEND_URL}/register`,
-            data:{
-                username:e.target.elements.username.value,
-                email:e.target.elements.email.value,
-                password:e.target.elements.password.value
-            },
-        }).then((response=>{
-            console.log(response)
-            if(response.data==="Email already in use"){
-                alert(response.data);
-            }
-            else if(response.data==="Choose a different username"){
-                alert(response.data)
-            }
-            else{
-                window.location.href = response.data
-            }
-        }))
+        createUserWithEmailAndPassword(auth, e.target.elements.email.value,e.target.elements.password.value)
+        .then(async ()=>{
+          await axios.post(`${process.env.REACT_APP_BACKEND_URL}/createUser`,{email:e.target.elements.email.value})
+          await updateProfile(auth.currentUser,{displayName:e.target.elements.username.value})
+          window.location.href='/login'
+        })
+        .catch((error)=>{
+          console.log(error)
+        })
     }
     const css = `
     

@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useAuthHeader, useAuthUser } from "react-auth-kit";
-import logo from './logo.svg'
-import menu from './hamburger.svg'
-import close from './close.svg'
+import logo from '../images/logo.svg'
+import menu from '../images/hamburger.svg'
+import close from '../images/close.svg'
+import {auth} from './firebase'
 
 function Home(){
     const [credits, setcredits] = useState();
@@ -11,30 +11,19 @@ function Home(){
     const [maxPages, setMaxPages] = useState(1)
     const [currentData, setcurrent] = useState();
     const [finishedData, setfinished] = useState();
-    const authHeader = useAuthHeader()
-    const authUser = useAuthUser()
-    const user = authUser()
-    //check auth
-    useEffect(()=>{
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth`,{headers:{"authorization":authHeader().substring(10)}})
-        .then((res)=>{
-            if(!(res.data===authUser().username)){
-              if(res.data==="verify"){
-                window.location.href = "/verify" 
-              }
-              else{
-                window.location.href = "/signout" 
-              }
-            }
-        })
-        .catch((e)=>{            
-            window.location.href = "/signout"           
-        })
-    },[])
+
+    auth.onAuthStateChanged((user)=>{
+      if(!user){
+        window.location.href ='/login'
+      }
+    })
+
+
+    //todo:check if the user is verified if they are not put up a popup that says get 5 free uses on phone verification
 
     //get the user credits
     useEffect(()=>{
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`,{username:user.username})
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`,{email:auth.currentUser.email})
         .then((res)=>{
             setcredits(res.data.credits)
         })
@@ -57,7 +46,7 @@ function Home(){
                 }
             })
             
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/run`,{username:user.username,searchTerm:e.target.elements.searchTerm.value,location:e.target.elements.location.value})
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/run`,{email:auth.currentUser.email,searchTerm:e.target.elements.searchTerm.value,location:e.target.elements.location.value})
             .then(()=>{
                 getCurrent()
                 getFinished()
@@ -72,7 +61,7 @@ function Home(){
     
     function getCurrent(){
       console.log("gc")
-      axios.post(`${process.env.REACT_APP_BACKEND_URL}/getCurrent`,{username:user.username})
+      axios.post(`${process.env.REACT_APP_BACKEND_URL}/getCurrent`,{email:auth.currentUser.email})
       .then((res)=>{
           console.log(res.data)
           setcurrent(res.data)
@@ -80,7 +69,7 @@ function Home(){
     }
 
     function getFinished(){
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFinished`,{username:user.username,page:page})
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFinished`,{email:auth.currentUser.email,page:page})
         .then((res)=>{
             console.log(res.data)
             const list = res.data

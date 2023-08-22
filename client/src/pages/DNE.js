@@ -1,6 +1,6 @@
 import { useSignOut } from "react-auth-kit";
 
-function SignOut(){
+function DNE(){
     function home(){
         window.location.href = '/'
     }
@@ -76,4 +76,4 @@ function SignOut(){
         </div>
     )
 }
-export default SignOut;
+export default DNE;
