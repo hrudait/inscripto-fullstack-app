@@ -43,7 +43,7 @@ function Login(){
   img{
       width: 30vw;
       display: block;
-      margin: 0 auto 1vw;
+      margin: 5vw auto 1vw;
   }
   h2{
       font-family: 'Chakra Petch';
