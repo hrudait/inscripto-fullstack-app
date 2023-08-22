@@ -64,7 +64,7 @@ function Register(){
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 8vw;
+      margin-top: 3vw;
   }
   input{
       width: 30vw;
