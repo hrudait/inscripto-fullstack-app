@@ -5,179 +5,220 @@ function Register(){
     
     function submit(e) {
         e.preventDefault()
-        createUserWithEmailAndPassword(auth, e.target.elements.email.value,e.target.elements.password.value)
-        .then(async ()=>{
-          await axios.post(`${process.env.REACT_APP_BACKEND_URL}/createUser`,{email:e.target.elements.email.value})
-          await updateProfile(auth.currentUser,{displayName:e.target.elements.username.value})
-          window.location.href='/login'
-        })
-        .catch((error)=>{
-          console.log(error)
-        })
+        if(e.target.elements.password.value===e.target.elements.repeatpassword.value){
+          createUserWithEmailAndPassword(auth, e.target.elements.email.value,e.target.elements.password.value)
+          .then(async ()=>{
+            await axios.post(`${process.env.REACT_APP_BACKEND_URL}/createUser`,{email:e.target.elements.email.value})
+            await updateProfile(auth.currentUser,{displayName:e.target.elements.username.value})
+            window.location.href='/login'
+          })
+          .catch((error)=>{
+            alert("Error with email or password, try again")
+          })
+        }
+        else{
+          alert("Passwords do not match")
+        }
     }
     const css = `
-    
-    body{
-      background-color: black;
-    }
-    .box{
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      -webkit-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
-    
+    *{
+      margin: 0;
+      padding: 0;
+      border: 0;
+      box-sizing: border-box;
+  }
+  body{
+      background-color: #3D3D3E;
+  }
+  .header{
+      width: 100vw;
+      display: flex;
+      justify-content: space-between;
+      padding-left: 2vw;
+      padding-top: 2vw;
+  }
+  img{
+      width: 20vw;
+  }
+  nav{
+      padding-right: 3vw;
+  }
+  a{
+      color: white;
+      text-decoration: none;
+      font-family: 'Chakra Petch';
+      font-size: 2rem;
+  }
+  
+  .register-href{
+      color: #89CED8;
+      text-decoration: underline;
+  }
+  
+  .register-href, .reset-href{
+      padding-left: 2vw;
+  }
+  
+  .full-page-container{
+      display: flex;
       align-items: center;
-    }
-    .registertext{   
-      color: white;
+      justify-content: center;
+      margin-top: 8vw;
+  }
+  input{
+      width: 30vw;
+      border: .25vw solid #EDEEC9;
+      border-radius: .75vw;
+      font-family: 'Sen';
+      padding-left: .75vw;
+      height: 4vw;
+      font-size: 2rem;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: white;
+  }
+  input::placeholder{
+      color: #B1B1B2;
+  }
+  input:focus{
+      border-color:#574AE2 ;
+      background-color: #DDDBF9;
+      outline: none;
+  }
+  .input-label{
+      display: block;
+      text-align: left;
       margin: 0;
+      padding: 0;
+      font-family: 'Chakra Petch';
+      font-size: 1.5rem;
+      color: #FBFCF4;
+      padding: .5vw;
+      margin-top: 1vw;
+  }
+  .register{
+      font-family: 'Chakra Petch';
+      font-size: 2.25rem;
+      background-color: #796EE8;
+      color: white;
+      margin: 0 auto 5vw;
       text-align: center;
-      font-size: 3vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin-bottom: 2vw;
-      margin-left: 6vw;
-      margin-right: 6vw;
-    }
-    .username{
-      background-color: black;
-      color: white;
-      border: .25vw solid white;
-      border-radius: .75vw;
-      width: 97.5%;
-      height: 5vw;
-      font-size: 1.66vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      padding: 0;
-      padding-left: 2.5%;
-      margin-bottom: 1vw;
-      outline-color: white;
-      
-    }
-    .email{
-      background-color: black;
-      color: white;
-      border: .25vw solid white;
-      border-radius: .75vw;
-      width: 97.5%;
-      height: 5vw;
-      font-size: 1.66vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      padding: 0;
-      padding-left: 2.5%;
-      margin-bottom: 1vw;
-      outline-color: white;
-      
-    }
-    .password{
-      background-color: black;
-      color: white;
-      border: .25vw solid white;
-      border-radius: .75vw;
-      width: 97.5%;
-      height: 5vw;
-      font-size: 1.66vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      padding: 0;
-      outline-color: white;
-      padding-left: 2.5%;
-    }
-    .linkcontainer{
-      margin-left: 1px;
+      margin-top: 3vw;
+      padding: .5vw 1vw;
+      border: black solid .25vw;
+      border-radius: 1vw;
+      filter: drop-shadow(-1.5vw 3vw 3vw rgba(0, 0, 0, .25));
+  }
+  .button-container{
+      justify-content: center;
+      align-items: center;
       width: 100%;
       display: flex;
-      justify-content: center;
-      margin-top: 1vw;
+  }
+  button:hover{
+      opacity: .8;
+  }
+  .already{
+      display: none;
+  }
+  .mobile-header{
+      display: none;
+  }
+  
+  @media (max-width: 1300px) and (orientation: landscape) {
+      input{
+          height: 5vw;
+      }
     }
-    .login{
-      color: white;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      font-size: 1.66vw;
-    }
-    .registerbutton {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 60%;
-      margin: 0 auto;
-      margin-top: 1vw;
-      height: 5vw;
-      border: 0;
-      border-radius: .5vw;
-    }
-    .registerbuttontext{
-      color: black;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      font-size: 3vw;
-    }
-    .registerbutton:hover{
-      opacity: 0.8;
-    }
-    @media screen and (orientation: portrait) {
-      .registertext{
-        width:90vw;
-        margin:0;
-        font-size: 10vw;
-        margin-bottom: 5vw;
+  @media (orientation:portrait){
+      .header{
+          display: none;
       }
-      .username{
-        height:15vw;
-        font-size: 6vw;
+      .mobile-header{
+          display: flex;
+          justify-content: space-between;
       }
-      .password{
-        height:15vw;
-        font-size: 6vw;
+      .register-text{
+          font-family: 'Chakra Petch';
+          font-size: 4rem;
+          padding: 5vw;
+          color: #BCB7F3;
       }
-      .email{
-        height:15vw;
-        font-size: 6vw;
+      img{
+          width: 40vw;
+          box-sizing: content-box;
+          padding: 5vw;
       }
-      .login{
-        font-size: 4vw;
-        margin-top: 3vw;
+      input{
+          height: 12.5vw;
+          width: 80vw;
+          border-radius: 1.5vw;
+          padding-left: 3vw;
+          font-size: 3.5rem;
       }
-      
-      .registerbutton{
-        height:15vw;
-        margin-top: 5vw;
-        color: white;
-        background-color:white;
+      .input-label {
+          font-size: 2rem;
+          margin-top: 5vw;
+          margin-bottom: 1vw;
       }
-      .registerbuttontext{
-        font-size: 8vw;
-        color: black;
+      .top{
+          margin-top: 3vw;
       }
-    
-    }
+      .already{
+          display: block;
+          font-family: "Sen";
+          font-weight: 500;
+          color: #89CED8;
+          padding: .5vw;
+          margin-top: 25vw;
+      }
+      .underline {
+          text-decoration: underline;
+          font-weight: 800;
+      }
+      .register {
+          margin-top: 10vw;
+          font-size: 4rem;
+          padding: 2vw 5vw;
+          border: black solid 0.75vw;
+          border-radius: 3vw;
+          filter: drop-shadow(-1vw 1.5vw 1.5vw rgba(0, 0, 0, .25));
+      }
+  }
     `
     return(
         <div className='registerpage'>
             <style>
                 {css}
             </style>
-            <div className="box">
-              <h1 className="registertext">Create An Account</h1>
-              <div className="registerform">
-                  <form onSubmit={submit}>
-                      <input className = "username" id="username"type="text" title="username" placeholder="Username"  required/><br />
-                      <input className = "email" id="email"type="email" title="email" placeholder="Email"  required/><br />
-                      <input className = "password" id="password"type="password" title="password" placeholder="Password" required/><br />
-                      <div className="linkcontainer">
-                          <a className='login' href='/login'>Already have an Account?</a>
-                      </div>
-                      <button type='submit' className="registerbutton"><span className='registerbuttontext'>register</span></button>
-                  </form>
-              </div>
-          </div>
+            <div className="header">
+                <img src="./Logo.svg"/>
+                <nav>
+                    <a href="/login" className="login-href">Login</a>
+                    <a href="/register" className="register-href">Register</a>
+                    <a href="/forgot" className="reset-href">Reset Password</a>
+                </nav>
+            </div>
+            <div className="mobile-header">
+                <a href="/register" className="register-text">Register</a>
+                <img src="./Logo.svg" />
+            </div>
+            <div className="full-page-container">
+                <form onSubmit={submit}>
+                    <a className="already" href="/login">Already have an account? <span className="underline">Login.</span></a>
+                    <span className="input-label top">Username</span>
+                    <input placeholder="enter username" type="text" className="username" id="username"/>
+                    <span className="input-label">Email</span>
+                    <input placeholder="enter email" type="email" className="email" id="email"/>
+                    <span className="input-label">Password</span>
+                    <input placeholder="enter password" type="password" className="password" id="password"/>
+                    <span className="input-label">Repeat Password</span>
+                    <input placeholder="repeat password" type="password" className="repeatpassword" id="repeatpassword"/>
+                    <div className="button-container">
+                        <button className="register" type="submit">register</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
     )
