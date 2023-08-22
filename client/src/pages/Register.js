@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth } from './firebase'
+import logo from "../images/logo.svg"
 function Register(){
     
     function submit(e) {
@@ -192,7 +193,7 @@ function Register(){
                 {css}
             </style>
             <div className="header">
-                <img src="./Logo.svg"/>
+                <img src={logo}/>
                 <nav>
                     <a href="/login" className="login-href">Login</a>
                     <a href="/register" className="register-href">Register</a>
@@ -201,7 +202,7 @@ function Register(){
             </div>
             <div className="mobile-header">
                 <a href="/register" className="register-text">Register</a>
-                <img src="./Logo.svg" />
+                <img src={logo} />
             </div>
             <div className="full-page-container">
                 <form onSubmit={submit}>
