@@ -18,6 +18,7 @@ function Home(){
       }
     })
 
+    console.log(auth.currentUser.email)
 
     //todo:check if the user is verified if they are not put up a popup that says get 5 free uses on phone verification
 
