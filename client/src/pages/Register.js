@@ -35,14 +35,17 @@ function Register(){
       width: 100vw;
       display: flex;
       justify-content: space-between;
-      padding-left: 2vw;
-      padding-top: 2vw;
+  
   }
   img{
       width: 20vw;
+      padding-left: 2vw;
+      padding-top: 2vw;
   }
   nav{
       padding-right: 3vw;
+
+      padding-top: 2vw;
   }
   a{
       color: white;
@@ -64,7 +67,6 @@ function Register(){
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 3vw;
   }
   input{
       width: 30vw;
