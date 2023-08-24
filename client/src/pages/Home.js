@@ -36,6 +36,7 @@ function Home(){
     const [showCurrent, setShowCurrent] = useState(true);
     const [showFinished, setShowFinished] = useState(true);
     const [username, setUsername] = useState()
+    const [verified, setVerified] = useState(true)
 
 
     //set the auth email and wait until it is set to run the getCredits,Current and Finished methods
@@ -61,6 +62,7 @@ function Home(){
       axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`,{email:email})
       .then((res)=>{
           setcredits(res.data.credits)
+          setVerified(res.data.phoneVerified)
       })
     }
 
@@ -284,7 +286,30 @@ function Home(){
       padding-top: 1vw;
       justify-content: center;
       align-items: center;
+      cursor:pointer;
   }
+  .credit-container:hover,.home:hover,.tutorial:hover,.signout:hover,.logout-href:hover,.home-href:hover,.tutorial-href:hover{
+        opacity: .8;
+  }
+  .run{
+    cursor:pointer;
+  }
+  .run:hover{
+    opacity:0.8;
+  }
+  .download:hover{
+    opacity:0.8;
+  }
+  .pagebutton{
+    cursor:pointer;
+  }
+  .pagebutton:hover{
+    opacity:0.8;
+  }
+  .home,.signout,.tutorial,.download{
+    cursor:pointer;
+  }
+  
   .credits{
       color: #89CED8;
       font-family: 'Chakra Petch';
@@ -539,6 +564,24 @@ function Home(){
       font-size: 2rem;
       border-radius: 200vw;
       border: black solid .2vw;
+  }
+  .popup{
+    width:100vw;
+    background-color: #796EE8;
+    display:flex;
+    justify-content:center;
+    cursor:pointer;
+  }
+  .popuptext{
+    font-family:'Chakra Petch';
+    font-size:2rem;
+    color:white;
+    margin-top: .5vw;
+    margin-bottom: .5vw;
+  }
+  .popuplink{
+    color: #89CED8;
+    margin-left:.5vw;
   }
   @media (orientation:landscape){
       .currentarrow{
@@ -797,9 +840,26 @@ function Home(){
     .credit-container{
         margin-left:3vw;
     }
+    .popuptext{
+        font-size:3.5rem;
+        text-align:center;
+        margin-bottom:2vw;
+    }
+    .popup{
+        margin-bottom:2vw;
+    }
   }
     `
-
+    function Popup(){
+        if(verified){
+            return (<div style={{ display: 'none' }}></div>);
+        }
+        return(
+            <div onClick={()=>window.location.href='/verify'} className="popup">
+                <span className="popuptext">Get 5 Free Credits When You Verify: <a className="popuplink" href="verify">Click Here</a></span>
+            </div>
+        )
+    }
     function MobileMenu(){
         if(toggle){
             return(
@@ -844,6 +904,7 @@ function Home(){
             <style>
                 {css}
             </style>
+            <Popup/>
             <MobileMenu/>
             <div className="header">
               <div className="one">
