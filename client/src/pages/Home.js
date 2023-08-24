@@ -19,6 +19,7 @@ import stage4 from '../images/stage4.svg'
 import timer from '../images/Timer.svg'
 import tutorial from '../images/Tutorial.svg'
 import wallet from '../images/wallet.svg'
+import menuToggle from '../images/mmtoggle.svg'
 import {auth} from './firebase'
 
 function Home(){
@@ -102,10 +103,10 @@ function Home(){
             const list = res.data
             const numOfCsvs = list.pop()
             setCompleted(numOfCsvs)
-            if(numOfCsvs==0){
+            if(numOfCsvs===0){
               setMaxPages(1)
             }
-            else if(numOfCsvs%5==0){
+            else if(numOfCsvs%5===0){
               setMaxPages(Math.floor(numOfCsvs/5))
             }
             else{
@@ -225,10 +226,8 @@ function Home(){
         };
       }
     }, [currentData]);
-    const [toggle,setToggle] = useState(true)
-    function toggleMenu(){
-      setToggle(!toggle)
-    }
+    const [toggle,setToggle] = useState(false)
+
     const css =`
     *{
       margin: 0;
@@ -725,14 +724,127 @@ function Home(){
       .refund{
           font-size: 2rem;
       }
+      .mobilemenu{
+        display: block;
+        z-index: 100;
+        width: 60vw;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #3D3D3E;
+        border: black solid .5vw;
+        border-top-right-radius: 2vw;
+        border-bottom-right-radius: 2vw;
+    }
+    .mmlogouticon,.mmreloadicon,.mmhomeicon,.mmtutorialicon{
+        height: 10vw;
+    }
+    .mmlogouttext,.mmreloadtext,.mmhometext,.mmtutorialtext,.email{
+        color: white;
+        font-family: 'Chakra Petch';
+        font-size: 3rem;
+        margin-left:3vw;
+    }
+    .mmhome,.mmlogout,.mmtutorial,.mmreload{
+        display: flex;
+        align-items: center;
+        margin-left: 12.5vw;
+        margin-bottom: 5vw;
+    }
+    .mmitems{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 60vw;
+        height: 100vh;
+    }
+    .mmbottom{
+        width: 60vw;
+    }
+    .email{
+        display: block;
+        text-align: center;
+        margin-bottom: 5vw;
+    }
+    .mmtoggle{
+        width: 60vw;
+        height: 30vh;
+        display: flex;
+        align-items: center;
+        justify-content: right;
+    }
+    .mmtogglearrow{
+        height:10vh;
+        margin-right: 3vw;
+    }
+    .mmtop{
+        margin-top:10vw;
+    }
+    .mmhometext{
+        color:#89CED8;
+        text-decoration:underline;
+    }
+    .pages{
+        margin-top:3vw;
+    }
+    .top{
+        margin-top:2vw;
+    }
+    .logo{
+        margin-right:2vw;
+    }
+    .credit-container{
+        margin-left:3vw;
+    }
   }
     `
+
+    function MobileMenu(){
+        if(toggle){
+            return(
+                <div className="mobilemenu">
+                    <div className="mmitems">
+                        <div className="mmtop">
+                            <div className="mmhome">
+                                <img className="mmhomeicon" src={home}/>
+                                <span className="mmhometext">Home</span>
+                            </div>
+                            <div className="mmtutorial">
+                                <img className="mmtutorialicon" src={tutorial}/>
+                                <span className="mmtutorialtext">Tutorial</span>
+                            </div>
+                            <div onClick={()=>window.location.href='/reload'} className="mmreload">
+                                <img className="mmreloadicon" src={plusbutton}/>
+                                <span className="mmreloadtext">Reload</span>
+                            </div>
+                        </div>
+                        <div onClick={()=>setToggle(!toggle)} className="mmtoggle">
+                            <img className="mmtogglearrow" src={menuToggle}/>
+                        </div>
+                        <div className="mmbottom">
+                            <span className="email">hrudai@hrudai.com</span>
+                            <div onClick={()=>window.location.href='/logout'} className="mmlogout">
+                                <img className="mmlogouticon" src={logout}/>
+                                <span className="mmlogouttext">Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+        else{
+            return (<div style={{ display: 'none' }}></div>);
+        }
+    }
+
     return(
         
         <div>
             <style>
                 {css}
             </style>
+            <MobileMenu/>
             <div className="header">
               <div className="one">
                   <img className="desktoplogo" src={logo}/>
@@ -754,8 +866,8 @@ function Home(){
               </div>  
           </div>
           <div className="mobile-header">
-              <img className="menuopen" src={hamburger}/>
-              <div>
+              <img onClick={()=>setToggle(!toggle)} className="menuopen" src={hamburger}/>
+              <div onClick={()=>window.location.href='/reload'}>
                   <img className="logo" src={logo} />
                   <div className="credit-container">
                       <img className="wallet" src={wallet}/>

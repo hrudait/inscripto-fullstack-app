@@ -191,7 +191,6 @@ app.post("/getFinished", async(req,res)=>{
   for (let i = (page-1)*5;i<((page-1)*5)+5;i++) {
     if(i<csvlist.length){
       const csvitem = await csv.findById(new mongoose.Types.ObjectId(csvlist[i]))
-      console.log(csvitem)
       const temp = {id:csvlist[i],name:csvitem.name,location:csvitem.location,url:csvitem.url,status:csvitem.status}
       returnlist.push(temp)
     }
