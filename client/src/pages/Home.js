@@ -1,8 +1,24 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import logo from '../images/logo.svg'
-import menu from '../images/hamburger.svg'
-import close from '../images/close.svg'
+import arrow from '../images/arrow.svg'
+import checkmark from '../images/checkmark.svg'
+import download from '../images/download.svg'
+import hamburger from '../images/hamburger.svg'
+import home from '../images/Home.svg'
+import logout from '../images/Logout.svg'
+import glass from '../images/Magnifying.svg'
+import pageleft from '../images/page left.svg'
+import pageright from '../images/page right.svg'
+import plusbutton from '../images/PlusButton.svg'
+import stage0 from '../images/stage0.svg'
+import stage1 from '../images/stage1.svg'
+import stage2 from '../images/stage2.svg'
+import stage3 from '../images/stage3.svg'
+import stage4 from '../images/stage4.svg'
+import timer from '../images/Timer.svg'
+import tutorial from '../images/Tutorial.svg'
+import wallet from '../images/wallet.svg'
 import {auth} from './firebase'
 
 function Home(){
@@ -11,35 +27,51 @@ function Home(){
     const [maxPages, setMaxPages] = useState(1)
     const [currentData, setcurrent] = useState();
     const [finishedData, setfinished] = useState();
+    const [email, setEmail] = useState(null);
+    const [completed, setCompleted] = useState(0);
+    const [numCurrent, setNumCurrent] = useState(0);
+    const [hideLeft, setHideLeft] = useState(true);
+    const [hideRight, setHideRight] = useState(true);
+    const [showCurrent, setShowCurrent] = useState(true);
+    const [showFinished, setShowFinished] = useState(true);
+    const [username, setUsername] = useState()
 
+
+    //set the auth email and wait until it is set to run the getCredits,Current and Finished methods
     auth.onAuthStateChanged((user)=>{
       if(!user){
-        window.location.href ='/login'
+        window.location.href ='/login' 
       }
-    })
-
-    console.log(auth.currentUser.email)
+      else if(!email){
+        setEmail(user.email)
+        setUsername(user.displayName)
+      }
+    }) 
+    useEffect(()=>{
+      if(email){
+        getCredits()
+        getCurrent()
+        getFinished()
+      }  
+    },[email])
+    
+    //get users credits
+    function getCredits(){
+      axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`,{email:email})
+      .then((res)=>{
+          setcredits(res.data.credits)
+      })
+    }
 
     //todo:check if the user is verified if they are not put up a popup that says get 5 free uses on phone verification
 
-    //get the user credits
-    useEffect(()=>{
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`,{email:auth.currentUser.email})
-        .then((res)=>{
-            setcredits(res.data.credits)
-        })
-        getCurrent()
-        getFinished()
-    },[])
-
 
     function submite(e){
-      console.log(e)
         if(credits===0){
             alert("Not enough credits, please reload")
         }
         else{
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/getCurrentCsvAmount`)
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/getCurrentCsvAmount`,{email:email})
             .then((res)=>{
                 if(parseInt(res.data,10)>=5){
                     alert('Too many requests')
@@ -47,34 +79,29 @@ function Home(){
                 }
             })
             
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/run`,{email:auth.currentUser.email,searchTerm:e.target.elements.searchTerm.value,location:e.target.elements.location.value})
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/run`,{email:email,searchTerm:e.target.elements.searchTerm.value,location:e.target.elements.location.value})
             .then(()=>{
                 getCurrent()
                 getFinished()
+                getCredits()
                 e.target.reset();
             })
         }
     }
-
-    function reload(){
-        window.location.href = '/reload'
-    }
     
     function getCurrent(){
-      console.log("gc")
-      axios.post(`${process.env.REACT_APP_BACKEND_URL}/getCurrent`,{email:auth.currentUser.email})
+      axios.post(`${process.env.REACT_APP_BACKEND_URL}/getCurrent`,{email:email})
       .then((res)=>{
-          console.log(res.data)
           setcurrent(res.data)
       })
     }
 
     function getFinished(){
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFinished`,{email:auth.currentUser.email,page:page})
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/getFinished`,{email:email,page:page})
         .then((res)=>{
-            console.log(res.data)
             const list = res.data
             const numOfCsvs = list.pop()
+            setCompleted(numOfCsvs)
             if(numOfCsvs==0){
               setMaxPages(1)
             }
@@ -84,24 +111,53 @@ function Home(){
             else{
               setMaxPages(Math.floor(numOfCsvs/5)+1)
             }
-            console.log(list)
             setfinished(list)
         })
     }
 
     function CurrentCsvs(){
-        console.log("eh")
         if(!currentData){
             return(<div></div>)
+        }
+        if(!showCurrent){
+          return(<div></div>)
         }
         return(
             <div>
                 {
                     currentData.map( csvitem => (
-                        <div className = "currentitem" key={csvitem.id}>
-                            <p className="currentsearchTerm">Search Term: {csvitem.name}</p>
-                            <p className="currentlocation">Location: {csvitem.location}</p>
-                        </div>
+                        <div className="currentitem" key={csvitem.id}>
+                          <div className="searchitems">
+                              <span className="search-item-info search-item-top">Search term: <span className="search-item-data">{csvitem.name}</span></span>
+                              <span className="search-item-info">Location: <span className="search-item-data">{csvitem.location}</span></span>
+                          </div>
+                            {csvitem.status === 0 ? (
+                              <div className="progress">
+                                <span className="status">initiated...</span>
+                                <img className="stage" src={stage0} />
+                              </div>
+                            ) : csvitem.status === 1 ? (
+                              <div className="progress">
+                                <span className="status">finding businesses...</span>
+                                <img className="stage" src={stage1} />
+                              </div>
+                            ): csvitem.status === 2 ?(
+                              <div className="progress">
+                                <span className="status">scraping websites...</span>
+                                <img className="stage" src={stage2} />
+                              </div>
+                            ): csvitem.status === 3 ?(
+                              <div className="progress">
+                                <span className="status">verifying emails...</span>
+                                <img className="stage" src={stage3} />
+                              </div>
+                            ):(
+                              <div className="progress">
+                                <span className="status">uploading csv...</span>
+                                <img className="stage" src={stage4} />
+                              </div>
+                            )}
+                      </div>  
                     ))
                 }
             </div>
@@ -112,9 +168,13 @@ function Home(){
         setPage(page+1)
     }
 
+
     useEffect(() => {
-      getCurrent();
-      getFinished();
+      if(email){
+        getCurrent();
+        getFinished();
+        getCredits()
+      }
     }, [page]);
     
     function decPage(){
@@ -125,36 +185,39 @@ function Home(){
         if(!finishedData){
             return(<div></div>)
         }
-        const hideLeftA = (page===1)
-        const hideRightA = (maxPages===page)
+        if(!showFinished){
+          return(<div></div>)
+        }
+        setHideLeft(page===1)
+        setHideRight(maxPages===page)
         return(
             <div>
                 {
                     finishedData.map( csvitem => (
-                        <div className="finisheditem" key={csvitem.id}>
-                            <p className="finishedsearchTerm">Search Term: {csvitem.name}</p>
-                            <p className="finishedlocation">Location: {csvitem.location}</p>
-                            {csvitem.url === "failed" ? (
-                            <p className="finisheddownlaod">Search Failed, Credit Refunded</p>
-                        ) : (
-                            <a className="finisheddownlaod" href={csvitem.url}>CSV Download</a>
-                        )}
+                        <div className="currentitem" key={csvitem.id}>
+                        <div className="searchitems">
+                            <span className="search-item-info search-item-top">Search term: <span className="search-item-data">{csvitem.name}</span></span>
+                            <span className="search-item-info">Location: <span className="search-item-data">{csvitem.location}</span></span>
                         </div>
+                        {csvitem.status===-1?(<div className="progress">
+                            <span className="refund">Search Failed, Credit Refunded</span>
+                        </div>):(
+                            <div className="progress">
+                              <img className="download" src={download} onClick={()=>window.open(csvitem.url)} />
+                           </div>
+                        )}
+                    </div>
                     ))
                 }
-                <div className="pagechanger">
-                {hideLeftA ? null : <span className="lefta" id="lefta" onClick={()=>decPage()}>&lt;</span>}
-                <span className="pagenum">{page}</span>
-                {hideRightA ? null : <span id="righta" className="righta" onClick={()=>incPage()}>&gt;</span>}
-                    
-                </div>
             </div>
         )
     }
+    //check every 30 seconds for updates to the currentData, ie for when the csv's finish
+    //only when currentData has a value
     useEffect(() => {
       if (currentData) {
-        const intervalone = setInterval(getCurrent, 30000);
-        const intervaltwo = setInterval(getFinished, 30000);
+        const intervalone = setInterval(getCurrent, 10000);
+        const intervaltwo = setInterval(getFinished, 10000);
   
         return () => {
           clearInterval(intervalone);
@@ -166,512 +229,596 @@ function Home(){
     function toggleMenu(){
       setToggle(!toggle)
     }
-    const css = `
-    .pagechanger{
-        display: flex;
-      justify-content: space-evenly;
+    const css =`
+    *{
       margin: 0;
-    }
-    .pagenum{
-        color: white;
-        font-family: 'Open Sans';
-        font-weight: 400;
-        font-size: 1.66vw;
-    }
-    .righta{
-        color: white;
-        font-family: 'Open Sans';
-        font-weight: 400;
-        font-size: 1.66vw;
-        margin-left: 1vw;
-        margin-right: 1vw;
-    }
-    .lefta{
-        color: white;
-        font-family: 'Open Sans';
-        font-weight: 400;
-        font-size: 1.66vw;
-        margin-left: 1vw;
-        margin-right: 1vw;
-    }
-    .lefta:hover{
-        text-decoration: underline;
-    }
-    .righta:hover{
-        text-decoration: underline;
-    }
-    body{
-        background-color: black;
-      }
-    .logo{
-      width: 20vw;
+      padding: 0;
+      border: 0;
+      box-sizing: border-box;
+  }
+  body{
+      background-color: #3D3D3E;
+      height:100vh;
+      width:100vw;
       margin: 0;
-    }
-    .desktopnavbar{
+      padding: 0;
+      box-sizing: content-box;
+      overflow-x: hidden;
+  }
+  .header{
       display: flex;
-      justify-content: space-evenly;
-      margin: 0;
-      margin-bottom: 2vw;
-    }
-    .navhome{
+  }
+  .mobile-header{
+      display: none;
+  }
+  
+  .img{
+      display: inline;
+  }
+  .one{
+      width: 40vw;
+      display: flex;
+  }
+  .three{
+      width: 40vw;
+      display: flex;
+      align-items: right;
+      justify-content: right;
+  }
+  .two{
+      width: 20vw;
+      text-align: center;
       color: white;
-      font-size: 3vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      margin-right: 3.5vw;
-    }
-    .navhome:hover{
-      opacity: 0.8;
-    }
-    .navreload{
+      font-family: 'Chakra Petch';
+      font-weight: 500;
+      font-size: 2.5rem;
+      padding-top: 2.25vw;
+  }
+  .desktoplogo{
+      width: 20vw;
+      padding-left: 2vw;
+      padding-top: 2vw;
+  }
+  .credit-container{
+      display: flex;
+      width: 30vw;
+      padding-top: 1vw;
+      justify-content: center;
+      align-items: center;
+  }
+  .credits{
+      color: #89CED8;
+      font-family: 'Chakra Petch';
+      padding-left: .25vw;
+  }
+  .wallet{
+      height: 2vw;
+  }
+  .plus-button{
+      padding-left: .75vw;
+      height: 2vw;
+  }
+  nav{
+      padding-top: 1vw;
+      padding-right: 2vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  .tutorial-href, .logout-href{
       color: white;
-      font-size: 3vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      margin-right: 3.5vw;
-    }
-    .navreload:hover{
-      opacity: 0.8;
-    }
-    .navsignout{
-      color: white;
-      font-size: 3vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      margin-right: 4.5vw;
-    }
-    .navsignout:hover{
-      opacity: 0.8;
-    }
-    .credits{
-      color: white;
-      font-size: 3vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;  
-    }
-    .container{
+      text-decoration: none;
+      font-family: 'Chakra Petch';
+      padding-right: 1.5vw;
+      font-size: 1.5rem;
+  }
+  .home-href{
+      color: #89CED8;
+      font-family: 'Chakra Petch';
+      padding-right: 1.5vw;
+      font-size: 1.5rem;
+  }
+  .tutorial, .home, .signout{
+      height: 2vw;
+      padding-right: .25vw;
+  }
+  .full-page-container{
       display: grid;
       grid-template-columns: 1fr 1fr;
-      
-    }
-    .startandnow{
-      
+      padding-top: 2vw;
+      width: 100vw;
+  }
+  
+  .search{
+      width: 47vw;
+      margin-left:2vw;
+      margin-right:1vw;
+      border: black solid 3px;
+      border-radius: .75vw;
+      background-color: #3A3A3B;
+  }
+  .searchTitle{
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      box-sizing: border-box;
       align-items: center;
-    }
-    .finishedbox{
-      
-      display: flex;
-      justify-content: center;
-      box-sizing: border-box;
-      align-items: flex-start; /* Align items at the top */
-    }
-    .finished{
-      
-      margin: 0;
-    }
-    .start{
-      
-      margin-bottom: 5vw;
-    }
-    .starttext{
+  }
+  .glass{
+      padding-left: 1vw;
+      padding-top: 1vw;
+  }
+  .starttext{
       color: white;
-      font-size: 3vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      margin-left: 2.5vw;
-      margin-right: 2.5vw;
-      margin-bottom: 1vw;
-    }
-    .searchTermtext{
+      font-family: 'Chakra Petch';
+      padding-left:.5vw;
+      padding-top:.75vw;
+      font-size: 2rem;
+  }
+  .creditcost{
+      color: #89CED8;
+      font-size: 1rem;
+  }
+  
+  .searchTerm{
+      display: block;
+      margin-left: 1vw;
+  }
+  .location{
+      margin-left: 1vw;
+  }
+  .input-label{
+      font-family: 'Chakra Petch';
       color: white;
-      font-size: 1vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      margin-right: 4.5vw;
-    }
-    .locationtext{
-      color: white;
-      font-size: 1vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      margin-right: 4.5vw;
-    }
-    .searchTerm{
-      background-color: black;
-      color: white;
-      border: .25vw solid white;
-      width: 100%;
-      height: 3vw;
-      font-size: 1vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      padding: 0;
-      padding-left: 2.5%;
-      margin-bottom: 1vw;
-      outline-color: white;
-      box-sizing: border-box;
-      
-    }
-    .location{
-      background-color: black;
-      color: white;
-      border: .25vw solid white;
-      width: 100%;
-      height: 3vw;
-      font-size: 1vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      padding: 0;
-      padding-left: 2.5%;
-      margin-bottom: 1vw;
-      outline-color: white;
-      box-sizing: border-box;
-      
-    }
-    .current{
-      
-    }
-    .runningnow{
-      color: white;
-      font-size: 3vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      margin-left: .5vw;
-      margin-right: .5vw;
-      margin-bottom: 1vw;
-    }
-    .finishedtext{
-      color: white;
-      font-size: 3vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      margin-left: 8vw;
-      margin-right: 8vw;
-      margin-bottom: 1vw;
-    }
-    .startbutton {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 40%;
-      margin: 0 auto;
-      height: 2vw;
-      border: 0;
+      display: block;
+      padding-left: 1.5vw;
+      margin-top: 1vw;
+      margin-bottom: .25vw;
+  }
+  .top{
+      margin-top: 1.5vw;
+  }
+  input{
+      width: 35vw;
+      height: 2.5vw;
+      padding-left: .5vw;
+      border: #EDEEC9 solid .25vw;
       border-radius: .5vw;
-    }
-    .startbuttontext{
+      font-family: "Sen";
+      font-size: 1.25rem;
       color: black;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      font-size: 1.66vw;
-    }
-    .startbutton:hover{
-      opacity: 0.8;
-    }
-    .currentitem{
-      width: 100%;
-      box-sizing: border-box;
-      margin: 0;
-      border: .25vw solid white;
-      border-radius: .5vw;
+  }
+  .input::placeholder{
+      color: #B1B1B2;
+  }
+  input:focus{
+      border-color:#574AE2 ;
+      background-color: #DDDBF9;
+      outline: none;
+  }
+  form{
+      margin-bottom: 2.5vw;
+  }
+  .run{
+      margin-left: 3vw;
+      font-family: 'Chakra Petch';
+      font-size: 1.25rem;
+      padding: .5vw 1vw;
+      background-color: #796EE8 ;
+      color: white;
+      border: black solid .175vw;
+      border-radius: .75vw;
+  }
+  .current{
+      width: 47vw;
+      margin-left:2vw;
+      margin-right:1vw;
+      margin-top:2vw;
+      border: black solid 3px;
+      border-radius: .75vw;
+      background-color: rgba(100,100,101,.4);
       margin-bottom: 1vw;
-    }
-    .currentsearchTerm{
+  }
+  .currentTitle{
+      display: flex;
+      align-items: center;
+      margin-bottom: 2vw;
+  }
+  .currenttext{
       color: white;
-      font-size: 1vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      padding-left: .25vw;
-    }
-    .currentlocation{
-      color: white;
-      font-size: 1vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      padding-left: .25vw;
-    }
-    .finisheditem{
+      font-family: 'Chakra Petch';
+      padding-left:.5vw;
+      padding-top:1vw;
+      font-size: 2rem;
+      width: 47vw;
+  }
+  .timer{
+      padding-left: 1vw;
+      padding-top: 1vw;
+  }
+  .queued{
+      color: #89CED8;
+      font-family: 'Chakra Petch';
+      font-size:2rem;
+      text-align: right;
+      white-space: nowrap;
+      padding-right: 1vw;
+      padding-top: 1vw;
+  }
+  .currentItems{
+      width: 44vw;
+      margin: 0 auto;
+  }
+  .currentitem{
+      background-color: #3A3A3B;
       width: 100%;
-      box-sizing: border-box;
-      margin: 0;
-      border: .25vw solid white;
-      border-radius: .5vw;
+      border: solid black .125vw;
       margin-bottom: 1vw;
-    }
-    .finishedsearchTerm{
+      border-radius: .5vw;
+      display: flex;
+  }
+  .searchitems{
+      padding: .5vw;
+      width: 50%;
+  }
+  .search-item-info{
+      color: #61BECB;
+      display: block;
+      font-family: 'Sen' ;
+      font-size: 1rem;
+  }
+  .search-item-top{
+      padding-bottom: .5vw;
+  }
+  .search-item-data{
       color: white;
-      font-size: 1vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      padding-left: .25vw;
-    }
-    .finishedlocation{
+  }
+  .progress{
+      display: flex;
+      justify-content: right;
+      align-items: center;
+      width: 50%;
+      padding-right: 1vw;
+  }
+  .status{
+      color: #61BECB;
+      font-family: 'Sen';
+      font-size: 1rem;
+      white-space: nowrap;
+  }
+  .finished{
+      width: 47vw;
+      margin-left:1vw;
+      margin-right:2vw;
+      border: black solid 3px;
+      border-radius: .75vw;
+      background-color: rgba(100,100,101,.4);
+      margin-bottom: 1vw;
+  }
+  .finishedTitle{
+      display: flex;
+      align-items: center;
+      margin-bottom: 2vw;
+  }
+  .completedtext{
       color: white;
-      font-size: 1vw;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      margin: 0;
-      padding-left: .25vw;
-    }
-    .finisheddownlaod{
+      font-family: 'Chakra Petch';
+      padding-left:.5vw;
+      padding-top:1vw;
+      font-size: 2rem;
+      width: 47vw;
+  }
+  .checkmark{
+      padding-left: 1vw;
+      padding-top: 1vw;
+  }
+  .completed{
+      color: #89CED8;
+      font-family: 'Chakra Petch';
+      font-size:2rem;
+      text-align: right;
+      white-space: nowrap;
+      padding-right: 1vw;
+      padding-top: 1vw;
+  }
+  .pages{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  .pagebutton{
+      height: 3vw;
+  }
+  .refund{
+      font-family: 'Sen';
+      color: red;
+      font-size: 1rem;
+  }
+  .pagenum{
+      padding: .5vw 1vw;
+      margin: 0 .5vw;
       color: white;
-      font-size: 1vw;
-      font-family: 'Open Sans';
-      text-decoration: underlines;
-      font-weight: 400;
-      margin: 0;
-      padding-left: .25vw;
-    }
-    .feedback{
-      color:white;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      font-size: 1vw;
-      text-align:center;
-      margin-top: 4vw;
-    }
-    .feedbackemail{
-      color:white;
-      font-family: 'Open Sans';
-      font-weight: 400;
-      font-size: 1vw;
-      text-align:center;
-    }
-    .footer{
-      
-    }
-    @media (orientation: landscape) {
-      .mobilenavbar {
-        display: none;
+      background-color: #796EE8;
+      font-family: 'Sen';
+      font-size: 2rem;
+      border-radius: 200vw;
+      border: black solid .2vw;
+  }
+  @media (orientation:landscape){
+      .currentarrow{
+          display: none;
       }
-    }
-    @media (orientation: portrait) {
-      .desktopnavbar {
-        display: none; /* This will hide the element in portrait mode */
+      .mobilesearch{
+          display: none;
       }
-      .menubox{
-        display:flex;
-        margin: 0;
+      .bottom{
+          display: inline;
       }
-      .menu{
-        width: 10vw;
+      .mobilemarginbottom{
+          display: none;
       }
-      .logo{
-        margin-left:5vw;
-        width: 70vw;
+  }
+  @media (orientation:portrait) {
+      .header{
+          display: none;
       }
-      .credits{
-        text-align: center;
-        font-size: 7vw;
-        margin:0;
+      .mobile-header{
+          display: flex;
       }
-      .menunav{
-        position:absolute;
-        top:0;
-        left:0;
-        width:80vw;
-        height:50vh;
-        background-color:black;
+      .full-page-container{
+          display: block;
       }
-      .navhome{
-        margin-left:5vw;
-        font-size:10vw;
+      .search, .current,.finished{
+          width: 95vw;
+          margin: 3vw auto;
+          border-radius: 2vw;
+          border-width: .5vw;
       }
-      .navreload{
-        margin-left:5vw;
-        font-size:10vw;
+      .currentTitle, .finishedTitle,.searchTitle{
+          width: 95vw;
+          display: flex;
       }
-      .navsignout{
-        margin-left:5vw;
-        font-size:10vw;
+      .currenttext,.completedtext,.starttext{
+          width: 95vw;
       }
-      .close{
-        position:absolute;
-        width:10vw;
-        top:2vw;
-        left:68vw;
+      .queued, .completed{
+          padding-top: 2vw;
+          padding-right: 2vw;
       }
-      .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .startandnow {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        /* ... (other CSS rules) ... */
-      }
-      .starttext{
-        font-size:10vw;
-        margin:0;
-        text-align: center;
-        margin-bottom: 2vw;
-      }
-      .searchTermtext{
-        font-size:5vw;
-      }
-      .searchTerm{
-        font-size:3vw;
-        height: 10vw;
-      }
-      .locationtext{
-        font-size:5vw;
-      }
-      .location{
-        font-size:3vw;
-        height: 10vw;
-      }
-      .startbutton{
-        margin-top:5vw;
-        height:10vw;
-        width: 50vw;
-        background-color:white;
-      }
-      .startbuttontext{
-        margin:0;
-        font-size:5vw;
-      }
-      .runningnow{
-        font-size: 8vw;
-        text-align: center;
-        margin:0;
-      }
-      .finishedtext{
-        font-size: 8vw;
-        text-align: center;
-        margin:0;
-      }
-      .feedback{
-        font-size:3vw;
-      }
-      .feedbackemail{
-        font-size:3vw;
-      }
-      .pagenum{
-        font-size:5vw;
-      }
-      .lefta{
-        font-size:5vw;
-      }
-      .righta{
-        font-size:5vw;
-      }
-      .finisheditem{
-        width:80vw;
-        height: 13vw;
-        margin-top:2vw;
+      .currentItems{
+          width: 90vw;
       }
       .currentitem{
-        width:80vw;
-        height: 15vw;
-        margin-top:2vw;
+          border-radius: 2vw;
+          border-width: .5vw;
       }
-      .currentsearchTerm{
-        font-size:5vw;
+      .searchitems{
+          padding:2vw;
+          
       }
-      .currentlocation{
-        font-size:5vw;
+      .search-item-info{
+          font-size: 2.25rem;
       }
-      .finishedsearchTerm{
-        font-size:3vw;
+      .download{
+          height: 10vw;
       }
-      .finishedlocation{
-        font-size:3vw;
+      .status{
+          font-size: 2.25rem;
       }
-      .finisheddownlaod{
-        font-size:3vw;
+      .stage{
+          height:10vw;
       }
-    }`
+      .currentlimit{
+          display: none;
+      }
+      .timer, .checkmark{
+          height: 10vw;
+          padding-left: 2vw;
+          padding-top: 2vw;
+      }
+      .currenttext, .completedtext{
+          font-size: 3rem;
+          padding-left: 2vw;
+          padding-top: 2vw;
+      }
+      .currentarrow{
+          height:8vw;
+          padding-right: 2vw;
+          padding-top: 2vw;
+      }
+      .searchitems{
+          width: 70%;
+      }
+      .progress{
+          width: 30%;
+      }
+      .searchTitle{
+          display: none;
+      }  
+      .mobilesearch{
+          display: inline;
+      }  
+      .input-label{
+  
+      } 
+      .searchTerm{
+          width: 90vw;
+          margin: 0 auto;
+          height: 10vw;
+          font-size: 2.5rem;
+          border-radius: 2vw;
+          border-width: .5vw;
+          padding-left: 2vw;
+      }
+      .location{
+          display: block;
+          width: 90vw;
+          margin: 0 auto;
+          height: 10vw;
+          font-size: 2.5rem;
+          border-radius: 2vw;
+          border-width: .5vw;
+          padding-left: 2vw;
+      }
+      .input-label{
+          padding-left: 5vw;
+          font-size: 2rem;
+      }
+      .bottom{
+          display: flex;
+          width: 95vw;
+          align-items: center;
+          justify-content: space-between;
+          padding-top: 2vw;
+      }
+      .mobilesearch{
+          display: flex;
+          align-items: center;
+      }
+      .glassmobile{
+          height: 8vw;
+          padding-left: 2.5vw;
+      }
+      .creditcost{
+          font-size: 2rem;
+          font-family: 'Chakra Petch';
+      }
+      .run{
+          text-align: right;
+          margin-right: 3vw;
+          font-size: 3rem;
+          padding: 1.5vw 3vw;
+          border-width: .5vw;
+          border-radius: 2vw;
+      }
+      .mobile-header{
+          display: flex;
+          justify-content: space-between;
+      }
+      .menuopen{
+          height: 8vw;
+          padding-top: 3vw;
+          padding-left: 3vw;
+          box-sizing: content-box;
+      }
+      .logo{
+          padding-top: 2vw;
+      }
+      .wallet{
+          height: 5vw;
+      }
+      .credits{
+          font-size: 2rem;
+          padding-left:1vw;
+      }
+      .plus-button{
+          height: 5vw;
+      }
+      .pages{
+          margin-bottom: 10vw;
+      }
+      .pagebutton{
+          height: 10vw;
+      }
+      .pagenum{
+          font-size: 4rem;
+          padding: 2vw 4vw;
+          border-width: .5vw;
+      }
+      .refund{
+          font-size: 2rem;
+      }
+  }
+    `
     return(
         
         <div>
             <style>
                 {css}
             </style>
-            <header className="desktopnavbar">
-                <img class ="logo"src={logo}/>
-                <nav>
-                    <a href="/" className="navhome">Home</a>
-                    <a href="/reload" className="navreload">Reload</a>
-                    <a href="https://youtu.be/OwvdhqWKS9U" className="navreload">Tutorial</a>
-                    <a href="/signout" className="navsignout">Signout</a>
-                </nav>
-                <h1 className="credits">credits: {credits}</h1>
-            </header>
-            <header className="mobilenavbar">
-              <div className="menubox"> 
-                <img class ="menu"src={menu} onClick={toggleMenu}/>
-                <img class ="logo"src={logo}/>
-              </div>
-                <h1 className="credits">credits: {credits}</h1>
-                {!toggle && (
-                  <div className="menunav">
-                    <img className="close" src={close} onClick={toggleMenu} />
-                    <a href="/" className="navhome">
-                      Home
-                    </a><br></br>
-                    <a href="/reload" className="navreload">
-                      Reload
-                    </a><br></br>
-                    <a href="https://youtu.be/OwvdhqWKS9U" className="navreload">
-                      Tutorial
-                    </a><br></br>
-                    <a href="/signout" className="navsignout">
-                      Signout
-                    </a><br></br>
-                    
+            <div className="header">
+              <div className="one">
+                  <img className="desktoplogo" src={logo}/>
+                  <div className="credit-container" onClick={()=>window.location.href='/reload'}>
+                      <img className="wallet" src={wallet}/>
+                      <span className="credits">{credits} credits</span>
+                      <img className="plus-button" src={plusbutton} />
                   </div>
-                )}
-            </header>
-            <div className="container">
-                <div className="startandnow">
-                    <div className="start">
-                        <form action="" onSubmit={submite}>
-                          <h1 className="starttext">Start a Search</h1>
-                          <h2 className="searchTermtext">Search Term (one per search):</h2>
-                          <input class = "searchTerm" id="searchTerm"type="text" title="searchTerm" placeholder="Ex: Restaurants, Painters, etc."  required/><br />
-                          <h2 className="locationtext">Location:</h2>
-                          <input class = "location" id="location" type="text" title="location" placeholder="Format: Street(Optional), City, State, Country"  required/><br />
-                          <button class = 'startbutton' type="submit"><span className="startbuttontext">start</span></button>
-                        </form>
+              </div>
+              <h1 className="two">
+                  Welcome, {username}.
+              </h1>
+              <div className="three">
+                  <nav>
+                      <img src={home} className="home" onClick={()=>window.location.href='/'} /><a href="/" className="home-href">Home</a>
+                      <img src={tutorial} className="tutorial" /><a href="/register" className="tutorial-href">Tutorial</a>
+                      <img src={logout} className="signout" onClick={()=>window.location.href='/signout'} /><a href="/signout" className="logout-href">Logout</a>
+                  </nav>
+              </div>  
+          </div>
+          <div className="mobile-header">
+              <img className="menuopen" src={hamburger}/>
+              <div>
+                  <img className="logo" src={logo} />
+                  <div className="credit-container">
+                      <img className="wallet" src={wallet}/>
+                      <span className="credits">{credits} credits</span>
+                      <img className="plus-button" src={plusbutton} />
+                  </div>
+              </div>
+          </div>
+          <div className="full-page-container">
+              <div className="left-side">
+                  <div className="search">
+                      <div className="searchTitle">
+                          <img className="glass" src={glass}/>
+                          <span className="starttext">Start a search <span className="creditcost">&#40;-1 credit&#41;</span></span>
+                      </div>
+                      <form onSubmit={submite}>
+                          <span className="input-label top">Search Term &#40;one per search&#41;</span>
+                          <input className="searchTerm" id="searchTerm" placeholder="Ex: restaurants, painters, etc."/>
+                          <span className="input-label">Location</span>
+                          <input className="location" id="location" placeholder="Format: Zipcode/City, State, Country"/>
+                          <div className="bottom">
+                              <div className="mobilesearch">
+                                  <img className="glassmobile" src={glass}/>
+                                  <span className="creditcost">&#40;-1 credit&#41;</span> 
+                              </div>
+                              <button className="run" type="submit">search</button>
+                          </div>
+                      </form>
+                  </div>
+                  <div className="current">
+                      <div className="currentTitle">
+                          <img className="timer" src={timer}/>
+                          <span className="currenttext">Running now <span className="creditcost currentlimit">&#40;limit: 5&#41;</span></span>
+                          <span className="queued">{numCurrent}/5 queued</span>
+                          <img className="currentarrow" onClick={()=>setShowCurrent(!showCurrent)} src={arrow}/>
+                      </div>
+                      <div className="currentItems">
+                          <CurrentCsvs/>
+                      </div>
+                  </div>
+              </div>
+              <div className="finished">
+                  <div className="finishedTitle">
+                      <img className="checkmark" src={checkmark}/>
+                      <span className="completedtext">Completed runs</span>
+                      <span className="completed">{completed} completed</span>
+                      <img className="currentarrow" onClick={()=>setShowFinished(!showFinished)} src={arrow}/>
+                  </div>
+                  <div className="currentItems">
+                      <FinishedCsvs/>
+                  </div>
+                  {showFinished ? (
+                      <div className="pages">
+                        {hideLeft ? null :<img className="pagebutton" onClick={()=>decPage()} src={pageleft}/>}
+                        <button className="pagenum">1</button>
+                        {hideRight ? null :<img className="pagebutton" onClick={()=>incPage()} src={pageright}/>}
                     </div>
-                    <div className="current">
-                        <h1 className="runningnow">Running Now (Limit 5)</h1>
-                        <CurrentCsvs/>
-                    </div>
-                </div>
-                <div className="finishedbox">
-                    <div className="finished">
-                        <h1 className="finishedtext">Finished Runs</h1>
-                        <FinishedCsvs/>
-                    </div>
-                </div>
-            </div>
-            <div className="footer">
-              <h1 className="feedback">Send Feedback Or Questions to <a className="feedbackemail"href = "mailto: support@localemail.app">support@localemail.app</a></h1>
-            </div>
+                  ):null}
+              </div>
+              <div className="mobilemarginbottom">
+
+              </div>
+          </div>
         </div>
     )
 }

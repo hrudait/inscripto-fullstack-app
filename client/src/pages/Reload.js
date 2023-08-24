@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import axios from 'axios'
 import logo from '../images/logo.svg'
 import menu from '../images/hamburger.svg'
-import close from '../images/close.svg'
+
 import { auth } from "./firebase"
 function Reload(){
     const [credits, setcredits] = useState();
@@ -313,7 +313,7 @@ function Reload(){
                 <h1 className="credits">credits: {credits}</h1>
                 {!toggle && (
                   <div className="menunav">
-                    <img className="close" src={close} onClick={toggleMenu} />
+                    <img className="close" src="" onClick={toggleMenu} />
                     <a href="/" className="navhome">
                       Home
                     </a><br></br>

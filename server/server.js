@@ -138,6 +138,8 @@ app.post("/createUser" , async (req,res)=>{
     phoneVerified: false,
     phoneNumber: "",
     customerId: customer.id,
+    currentcsvs: [],
+    pastcsvs: []
   })
   await newUser.save()
   return res.send("worked")
@@ -155,20 +157,21 @@ app.post('/getUser', async(req,res)=>{
 app.post('/getCurrentCsvAmount', async(req,res)=>{
   const doc = await User.findOne({email:req.body.email})
   if(doc){
-    return res.send(doc.currentcsvs.length);
+    return res.send(""+doc.currentcsvs.length);
   }
   else{
     return res.status(400).send("fail")
-  }
+  } 
 })
 
 app.post("/getCurrent", async(req,res)=>{
   const doc = await User.findOne({email:req.body.email})
+
   const csvlist = doc.currentcsvs
   const returnlist = []
   for (const csve of csvlist) {
     const csvitem = await csv.findById(new mongoose.Types.ObjectId(csve))
-    const temp = {id:csve,name:csvitem.name,location:csvitem.location}
+    const temp = {id:csve,name:csvitem.name,location:csvitem.location,status:csvitem.status}
     returnlist.push(temp)
   }
   if(returnlist.length===0){
@@ -179,6 +182,7 @@ app.post("/getCurrent", async(req,res)=>{
 
 app.post("/getFinished", async(req,res)=>{
   const doc = await User.findOne({email:req.body.email})
+ 
   const csvlist = doc.pastcsvs
   
   const page = parseInt(req.body.page)
@@ -187,7 +191,8 @@ app.post("/getFinished", async(req,res)=>{
   for (let i = (page-1)*5;i<((page-1)*5)+5;i++) {
     if(i<csvlist.length){
       const csvitem = await csv.findById(new mongoose.Types.ObjectId(csvlist[i]))
-      const temp = {id:csvlist[i],name:csvitem.name,location:csvitem.location,url:csvitem.url}
+      console.log(csvitem)
+      const temp = {id:csvlist[i],name:csvitem.name,location:csvitem.location,url:csvitem.url,status:csvitem.status}
       returnlist.push(temp)
     }
   }
@@ -255,7 +260,7 @@ app.post('/run', async (req,res)=>{
   //make the frontend look nice and work
 })
 app.post('/finish',async (req,res)=>{
-  await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:4,url:req.body.downloadUrl})
+  await csv.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.csvid),{status:5,url:req.body.downloadUrl})
   await User.findOneAndUpdate({email:req.body.email},{$pull:{currentcsvs:req.body.csvid},$push:{pastcsvs:req.body.csvid}})
   return res.send("cool")
 })
