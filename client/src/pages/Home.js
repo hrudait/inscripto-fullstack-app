@@ -80,6 +80,7 @@ function Home(){
         else{
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/getCurrentCsvAmount`,{email:email})
             .then((res)=>{
+                setNumCurrent(parseInt(res.data,10))
                 if(parseInt(res.data,10)>=5){
                     alert('Too many requests')
                     return
@@ -100,6 +101,7 @@ function Home(){
       axios.post(`${process.env.REACT_APP_BACKEND_URL}/getCurrent`,{email:email})
       .then((res)=>{
           setcurrent(res.data)
+          setNumCurrent(res.data.length);
       })
     }
 
