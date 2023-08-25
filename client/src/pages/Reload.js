@@ -13,15 +13,21 @@ import { auth } from "./firebase"
 function Reload(){
     const [credits, setcredits] = useState();
     const [email, setEmail] = useState();
-    const [toggle, setToggle] = useState(false);
-    auth.onAuthStateChanged((user)=>{
-      if(!user){
-        window.location.href ='/login'
-      }
-      else{
-        setEmail(user.email)
-      }
-    })
+    const [toggle, settoggle] = useState(false);
+    const [input, setInput] = useState(0)
+    useEffect(()=>{
+        if(!email){
+            auth.onAuthStateChanged((user)=>{
+                console.log("change")
+              if(!user){
+                window.location.href ='/login' 
+              }
+              else if(!email){
+                setEmail(user.email)
+              }
+            }) 
+        }
+    },[email])
 
     useEffect(()=>{
       if(email){
@@ -31,20 +37,28 @@ function Reload(){
         })
       }  
     },[email])
+
     function handleChange(event){
         let value = event.target.value;
-        // Remove non-numeric and non-decimal characters
         value = value.replace(/[^0-9.]/g, '');       
-        // Remove decimal points
-        value = value.replace(/(\.*)\./g, '$1');        
-        // Update the input value
-        event.target.value = value;
+        value = value.replace(/\.(?=.*\.)/g, '$1');
+        if(value!=0){
+          setInput(Math.floor(value));  
+        }else{
+            setInput(value)
+        } 
     }
     function next(number){
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/checkout`,{email:auth.currentUser.email,amount:number})
-        .then((res)=>{
-            window.location = res.data
-        })
+        if(parseInt(number)>0){
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/checkout`,{email:auth.currentUser.email,amount:number})
+            .then((res)=>{
+                window.location = res.data
+            })
+        }
+        else{
+            alert("Not a valid number")
+        }
+        
     }
 
     function nextInput(event){
@@ -60,7 +74,9 @@ function Reload(){
     border: 0;
     box-sizing: border-box;
 }
-
+button{
+    cursor:pointer;
+}
 body {
     background-color: #3D3D3E;
     height: 100vh;
@@ -439,17 +455,16 @@ a:hover{
 
     `
     function MobileMenu(){
-      if(toggle){
-        console.log("errors here")
+        if(toggle){
           return(
               <div className="mobilemenu">
                   <div className="mmitems">
                       <div className="mmtop">
                           <div className="mmhome">
-                              <img alt="" className="mmhomeicon" src={home}/>
+                              <img onClick={()=>window.location.href='/'} alt="" className="mmhomeicon" src={home}/>
                               <span className="mmhometext">Home</span>
                           </div>
-                          <div className="mmtutorial">
+                          <div onClick={()=>window.location.href='/tutorial'} className="mmtutorial">
                               <img alt="" className="mmtutorialicon" src={tutorial}/>
                               <span className="mmtutorialtext">Tutorial</span>
                           </div>
@@ -458,11 +473,11 @@ a:hover{
                               <span className="mmreloadtext">Reload</span>
                           </div>
                       </div>
-                      <div onClick={()=>{setToggle(!toggle); console.log("done")}} className="mmtoggle">
+                      <div onClick={()=>settoggle(!toggle)} className="mmtoggle">
                           <img alt="" className="mmtogglearrow" src={menuToggle}/>
                       </div>
                       <div className="mmbottom">
-                          <span className="email">hrudai@hrudai.com</span>
+                          <span className="email">{email}</span>
                           <div onClick={()=>window.location.href='/logout'} className="mmlogout">
                               <img alt="" className="mmlogouticon" src={logout}/>
                               <span className="mmlogouttext">Logout</span>
@@ -470,18 +485,17 @@ a:hover{
                       </div>
                   </div>
               </div>
-          )
-      }
-      else{
-          return (<div style={{ display: 'none' }}></div>);
-      }
+          )}
+          else{
+            return (<div style={{ display: 'none' }}></div>);
+          }
     }
     return(
         <div>
             <style>
                 {css}
             </style>
-            
+            <MobileMenu/>
             <div className="header">
               <div className="one">
                   <img alt="" className="desktoplogo" src={logo}/>
@@ -492,14 +506,14 @@ a:hover{
               </div>
               <div className="three">
                   <nav>
-                      <img alt="" src={home} className="home" /><a href="/" className="home-href">Home</a>
-                      <img alt=""  src={tutorial} className="tutorial" /><a href="/register" className="tutorial-href">Tutorial</a>
-                      <img alt="" src={logout} className="signout" /><a href="/signout" className="logout-href">Logout</a>
+                      <img alt="" onClick={()=>window.location.href='/'} src={home} className="home" /><a href="/" className="home-href">Home</a>
+                      <img alt=""  src={tutorial} className="tutorial" onClick={()=>window.location.href='/tutorial'} /><a href="/register" className="tutorial-href">Tutorial</a>
+                      <img alt="" src={logout} className="signout" onClick={()=>window.location.href='/signout'} /><a href="/signout" className="logout-href">Logout</a>
                   </nav>
               </div>  
           </div>
           <div className="mobile-header">
-              <img alt="" onClick={()=>setToggle(!toggle)} className="menuopen" src={hamburger}/>
+              <img alt="" onClick={()=>settoggle(!toggle)} className="menuopen" src={hamburger}/>
               <div>
                   <img alt="" className="logo" src={logo} />
                   <div className="credit-container">
@@ -511,22 +525,22 @@ a:hover{
           <div className="full-page-container">
               <span className="creditcosttext">Credits cost <span className="creditcost">$0.5 per credit</span></span>
               <span className="amounttext">please enter the amount you would like to buy.</span>
-              <form>
+              <form onSubmit={nextInput}>
                   <span className="input-label">Credits to Buy</span>
                   <div className="inputcontainer">
-                      <input className="number" type="number" />
-                      <button className="inputbutton" type="submit"><span className="plus">+</span> <span className="creditbutton">37 credits &#40;$18.5&#41;</span></button>
+                      <input title="creditAmount" id="creditAmount" onChange={handleChange} step={1} value={input} className="number" type="number" />
+                      <button className="inputbutton" type="submit"><span className="plus">+</span> <span className="creditbutton">{input} credits &#40;${input*0.5}&#41;</span></button>
                   </div>
               </form>
               <span className="or">OR</span>
               <span className="try">Try one of our packages</span>
               <div className="button-container">
-                  <button className="button"><span className="plus">+</span> <span className="creditbutton">5 credits &#40;$2.5&#41;</span></button>
-                  <button className="button"><span className="plus">+</span> <span className="creditbutton">10 credits &#40;$4&#41;</span></button>
-                  <button className="button"><span className="plus">+</span> <span className="creditbutton">25 credits &#40;$10&#41;</span></button>
-                  <button className="button"><span className="plus">+</span> <span className="creditbutton">50 credits &#40;$15&#41;</span></button>
-                  <button className="button"><span className="plus">+</span> <span className="creditbutton">100 credits &#40;$30&#41;</span></button>
-                  <button className="button"><span className="plus">+</span> <span className="creditbutton">200 credits &#40;$50&#41;</span></button>
+                  <button className="button" onClick={()=>next(5)}><span className="plus">+</span> <span className="creditbutton">5 credits &#40;$2.5&#41;</span></button>
+                  <button className="button" onClick={()=>next(10)}><span className="plus">+</span> <span className="creditbutton">10 credits &#40;$4.5&#41;</span></button>
+                  <button className="button" onClick={()=>next(25)}><span className="plus">+</span> <span className="creditbutton">25 credits &#40;$10&#41;</span></button>
+                  <button className="button" onClick={()=>next(50)}><span className="plus">+</span> <span className="creditbutton">50 credits &#40;$18&#41;</span></button>
+                  <button className="button" onClick={()=>next(100)}><span className="plus">+</span> <span className="creditbutton">100 credits &#40;$32&#41;</span></button>
+                  <button className="button" onClick={()=>next(200)}><span className="plus">+</span> <span className="creditbutton">200 credits &#40;$60&#41;</span></button>
               </div>
           </div>
         </div>

@@ -278,11 +278,38 @@ app.post('/refund',async (req,res)=>{
 
 app.post('/checkout',async (req,res)=>{
   const doc = await User.findOne({email:req.body.email})
+  if(parseInt(req.body.amount)===NaN){
+    return res.send('fail')
+  }
+  let price;
+  const amount = req.body.amount
+  switch (amount){
+    case 5:
+      price = 'price_1NiqqpE8uhRktaazOVlN6y6X'
+      break;
+    case 10:
+      price = 'price_1NiqqpE8uhRktaazQfS64ajr'
+      break;
+    case 25:
+      price = 'price_1NiqqpE8uhRktaazZ4wVrcL7'
+      break;
+    case 50:
+      price = 'price_1NiqqpE8uhRktaazT4AxBRWz'
+      break;
+    case 100:
+      price = 'price_1NiqqpE8uhRktaaz0obq1Q35'
+      break;
+    case 200:
+      price = 'price_1NiqqpE8uhRktaazeK25x6HP'
+      break;
+    default:
+      price = 'price_1NiqqpE8uhRktaazwQ82F1pd'
+  }
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
-        price: "price_1NVkLBE8uhRktaazCkgL3I4v",
-        quantity: parseInt(req.body.amount),
+        price: price,
+        quantity: amount,
       }
     ],
     customer:doc.customerId,

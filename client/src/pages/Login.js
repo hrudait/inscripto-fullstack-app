@@ -6,8 +6,7 @@ import Logo from "../images/logo.svg"
 function Login(){
     auth.onAuthStateChanged((user)=>{
       if(user){
-        // window.location.href ='/'
-        console.log(auth.currentUser.email)
+        window.location.href ='/'
       }
     })
     const Submit = (e) => {

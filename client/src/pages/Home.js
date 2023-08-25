@@ -40,20 +40,24 @@ function Home(){
 
 
     //set the auth email and wait until it is set to run the getCredits,Current and Finished methods
-    auth.onAuthStateChanged((user)=>{
-      if(!user){
-        window.location.href ='/login' 
-      }
-      else if(!email){
-        setEmail(user.email)
-        setUsername(user.displayName)
-      }
-    }) 
+
     useEffect(()=>{
       if(email){
         getCredits()
         getCurrent()
         getFinished()
+      }
+      else if(!email){
+        auth.onAuthStateChanged((user)=>{
+            console.log("change")
+          if(!user){
+            window.location.href ='/login' 
+          }
+          else if(!email){
+            setEmail(user.email)
+            setUsername(user.displayName)
+          }
+        }) 
       }  
     },[email])
     
@@ -866,11 +870,11 @@ function Home(){
                 <div className="mobilemenu">
                     <div className="mmitems">
                         <div className="mmtop">
-                            <div className="mmhome">
+                            <div onClick={()=>window.location.href='/'} className="mmhome">
                                 <img className="mmhomeicon" src={home}/>
                                 <span className="mmhometext">Home</span>
                             </div>
-                            <div className="mmtutorial">
+                            <div onClick={()=>window.location.href='/tutorial'} className="mmtutorial">
                                 <img className="mmtutorialicon" src={tutorial}/>
                                 <span className="mmtutorialtext">Tutorial</span>
                             </div>
@@ -883,7 +887,7 @@ function Home(){
                             <img className="mmtogglearrow" src={menuToggle}/>
                         </div>
                         <div className="mmbottom">
-                            <span className="email">hrudai@hrudai.com</span>
+                            <span className="email">{email}</span>
                             <div onClick={()=>window.location.href='/logout'} className="mmlogout">
                                 <img className="mmlogouticon" src={logout}/>
                                 <span className="mmlogouttext">Logout</span>
@@ -920,9 +924,9 @@ function Home(){
               </h1>
               <div className="three">
                   <nav>
-                      <img src={home} className="home" onClick={()=>window.location.href='/'} /><a href="/" className="home-href">Home</a>
-                      <img src={tutorial} className="tutorial" /><a href="/register" className="tutorial-href">Tutorial</a>
-                      <img src={logout} className="signout" onClick={()=>window.location.href='/signout'} /><a href="/signout" className="logout-href">Logout</a>
+                  <img alt="" onClick={()=>window.location.href='/'} src={home} className="home" /><a href="/" className="home-href">Home</a>
+                      <img alt=""  src={tutorial} className="tutorial" onClick={()=>window.location.href='/tutorial'} /><a href="/tutorial" className="tutorial-href">Tutorial</a>
+                      <img alt="" src={logout} className="signout" onClick={()=>window.location.href='/signout'} /><a href="/signout" className="logout-href">Logout</a>
                   </nav>
               </div>  
           </div>

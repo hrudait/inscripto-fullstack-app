@@ -3,7 +3,11 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth } from './firebase'
 import logo from "../images/logo.svg"
 function Register(){
-    
+    auth.onAuthStateChanged((user)=>{
+        if(user){
+          window.location.href ='/'
+        }
+      })
     function submit(e) {
         e.preventDefault()
         if(e.target.elements.password.value===e.target.elements.repeatpassword.value){
