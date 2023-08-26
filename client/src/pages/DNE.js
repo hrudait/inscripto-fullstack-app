@@ -1,77 +1,81 @@
-import { useSignOut } from "react-auth-kit";
+import logo from '../images/logo.svg'
 
 function DNE(){
-    function home(){
-        window.location.href = '/'
-    }
-    const css = `body{
-        background-color: black;
-      }
-    .box{
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-    
-        align-items: center;
-    }
-    
-    .signedOut{   
-        color: white;
-        margin: 0;
-        text-align: center;
-        font-size: 3vw;
-        font-family: 'Open Sans';
-        font-weight: 400;
-        margin-bottom: 10vw;
-        margin-left: 2.5vw;
-        margin-right: 2.5vw;
-      }
-    
-      .return {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 60%;
-        margin: 0 auto;
-        margin-top: 1vw;
-        height: 5vw;
-        border: 0;
-        border-radius: .5vw;
-      }
-      .returnText{
-        color: black;
-        font-family: 'Open Sans';
-        font-weight: 400;
-        font-size: 3vw;
-      }
-      .return:hover{
-        opacity: 0.8;
-      }
-      @media (orientation: portrait){
-        .signedOut{
-          font-size: 10vw;
-          width: 100vw;
+
+    const css = `
+        body{
+            background-color: #3D3D3E;
+            overflow-x:hidden;
         }
-        .return{
-          width: 75vw;
-          height: 10vw;
-          background-color:white;
+        .container{
+            width:100vw;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-direction:column;
         }
-        .returnText{
-          font-size: 5vw;
+        img{
+            display:block;
+            padding:1vw;
         }
-      }
+        span{
+            display:block;
+            color:white;
+            font-family:'Sen';
+            font-weight:400;
+            font-size:3rem;
+            margin-top:15vw;
+            margin-bottom:5vw;
+        }
+        button{
+            margin:0;
+            font-family: 'Chakra Petch';
+            font-size: 2rem;
+            padding: .5vw 1vw;
+            background-color: #796EE8 ;
+            color: white;
+            border: black solid .175vw;
+            border-radius: .75vw;
+
+            cursor:pointer;
+        }
+        @media (orientation:portrait){
+            .image{
+                display:flex;
+                justify-content:right;
+                width:100vw;
+            }
+            img{
+                padding: 2vw;
+            }
+            span{
+                font-size:5rem;
+                margin-top:40vw;
+                margin-bottom:10vw;
+                width:90vw;
+                text-align:center;
+            }
+            button{
+              font-family:'Sen';
+              padding: 2vw 3vw;
+              font-size:5rem;
+              width:80vw;
+              border-width:.5vw;
+              border-radius: 2vw;
+            }
+        }
     `
+
     return(
         <div>
             <style>
                 {css}
             </style>
-            <div className="box">
-                <h1 className="signedOut">This page does not exist.</h1>
-                <button className = 'return' onClick={home}><span className="returnText">return to home</span></button>
+            <div className='image'> 
+            <img src={logo}/></div>
+            <div className='container'>
+                <span>This page does not exist.</span>
+                <button onClick={()=>window.location.href="/"}>return to home</button>
             </div>
         </div>
     )

@@ -5,7 +5,7 @@ import Login from "./pages/Login"
 import Reload from "./pages/Reload";
 import SignOut from "./pages/SignOut";
 import DNE from "./pages/DNE"
-
+import Verified from "./pages/Verified";
 import {BrowserRouter} from "react-router-dom"
 import Forgot from "./pages/Forgot";
 import Verify from "./pages/Verify";
@@ -18,6 +18,7 @@ function App() {
           <Route path="/login" element={<Login />}/>
           <Route path="/forgot" element={<Forgot />}/>
           <Route path="/verify" element={<Verify />}/>
+          <Route path="/verified" element={<Verified />}/>
           <Route path="/reload" element={<Reload />}/>
           <Route path="/register" element ={<Register />} />
           <Route path="/signout" element={<SignOut />}/>

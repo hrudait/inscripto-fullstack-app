@@ -1,12 +1,6 @@
 import logo from '../images/logo.svg'
-import { auth } from './firebase';
 
-function Signout(){
-
-    async function logout(){
-      await auth.signOut()
-    }
-    logout();
+function Verified(){
 
     const css = `
         body{
@@ -58,16 +52,14 @@ function Signout(){
                 font-size:5rem;
                 margin-top:40vw;
                 margin-bottom:10vw;
-                width:90vw;
-                text-align:center;
             }
             button{
-              font-family:'Sen';
-              padding: 2vw 3vw;
-              font-size:5rem;
-              width:80vw;
-              border-width:.5vw;
-              border-radius: 2vw;
+                font-family:'Sen';
+                padding: 2vw 3vw;
+                font-size:5rem;
+                width:80vw;
+                border-width:.5vw;
+                border-radius: 2vw;
             }
         }
     `
@@ -80,10 +72,10 @@ function Signout(){
             <div className='image'> 
             <img src={logo}/></div>
             <div className='container'>
-                <span>You've been signed out.</span>
-                <button onClick={()=>window.location.href="/login"}>return to login</button>
+                <span>account verified.</span>
+                <button onClick={()=>window.location.href="/"}>return to home</button>
             </div>
         </div>
     )
 }
-export default Signout;
+export default Verified;
