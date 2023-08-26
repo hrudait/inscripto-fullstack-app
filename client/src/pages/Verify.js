@@ -375,8 +375,10 @@ function Verify(){
             height:13vw;
             border-width:.5vw;
             border-radius: 2vw;
+            font-family:'Sen';
         }
         .verify{
+            font-family:'Sen';
             margin:0;
             margin-left:2vw;
             font-size:4rem;
