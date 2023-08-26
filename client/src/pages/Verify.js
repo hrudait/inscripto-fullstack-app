@@ -151,7 +151,7 @@ function Verify(){
     .account{
         font-family:'Chakra Petch';
         font-size: 3rem;
-        margin-top:1vw;
+        margin-top:5vw;
         font-weight:600;
         color:#FBFCF4;
     }

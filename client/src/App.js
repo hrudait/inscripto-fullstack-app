@@ -9,6 +9,7 @@ import Verified from "./pages/Verified";
 import {BrowserRouter} from "react-router-dom"
 import Forgot from "./pages/Forgot";
 import Verify from "./pages/Verify";
+import ResetSent from "./pages/ResetSent";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Home />}/>
           <Route path="/login" element={<Login />}/>
           <Route path="/forgot" element={<Forgot />}/>
+          <Route path="/resetSent" element={<ResetSent />}/>
           <Route path="/verify" element={<Verify />}/>
           <Route path="/verified" element={<Verified />}/>
           <Route path="/reload" element={<Reload />}/>

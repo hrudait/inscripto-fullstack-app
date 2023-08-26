@@ -1,245 +1,325 @@
 import { useState, useEffect } from "react"
 import axios from 'axios'
-import { auth } from "./firebase"
-
+import { getAuth, sendPasswordResetEmail } from "firebase/auth"
+import logo from '../images/logo.svg'
+import leftarrow from '../images/larrow.svg'
 function Forgot(){
+    
     const css = `
-   
-    body{
-        background-color: black;
+    *{
+      margin: 0;
+      padding: 0;
+      border: 0;
+      box-sizing: border-box;
+  }
+  body{
+      background-color: #3D3D3E;
+  }
+  .header{
+      width: 100vw;
+      display: flex;
+      justify-content: space-between;
+  
+  }
+  img{
+      width: 20vw;
+      padding-left: 2vw;
+      padding-top: 2vw;
+  }
+  nav{
+      padding-right: 3vw;
+
+      padding-top: 2vw;
+  }
+  a{
+      color: white;
+      text-decoration: none;
+      font-family: 'Chakra Petch';
+      font-size: 2rem;
+  }
+  
+  .reset-href{
+      color: #89CED8;
+      text-decoration: underline;
+  }
+  
+  .register-href, .reset-href{
+      padding-left: 2vw;
+  }
+  
+  .full-page-container{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+  input{
+      width: 30vw;
+      border: .25vw solid #EDEEC9;
+      border-radius: .75vw;
+      font-family: 'Sen';
+      padding-left: .75vw;
+      height: 4vw;
+      font-size: 2rem;
+      background-color: white;
+  }
+  input::placeholder{
+      color: #B1B1B2;
+  }
+  input:focus{
+      border-color:#574AE2 ;
+      background-color: #DDDBF9;
+      outline: none;
+  }
+  .input-label{
+      text-align: left;
+      margin: 0;
+      padding: 0;
+      font-family: 'Chakra Petch';
+      font-size: 1.5rem;
+      color: #FBFCF4;
+      margin-left:.5vw;
+
+  }
+  .register{
+      display:inline;
+      font-family: 'Chakra Petch';
+      font-size: 2.25rem;
+      background-color: #796EE8;
+      color: white;
+      margin: 0;
+      margin-top:1.75rem;
+      margin-left:2vw;
+      text-align: center;
+      padding: .5vw 1vw;
+      border: black solid .25vw;
+      border-radius: 1vw;
+      filter: drop-shadow(-1.5vw 3vw 3vw rgba(0, 0, 0, .25));
+  }
+  .button-container{
+      display:flex;
+      justify-content:center;
+      margin-top:5vw;
+  }
+  .input-container{
+    display:inline;
+  }
+  button:hover{
+      opacity: .8;
+  }
+  .already{
+      display: none;
+  }
+  .mobile-header{
+      display: none;
+  }
+  .please{
+    display:block;
+    margin-top:5vw;
+    text-align:center;
+    color:white;
+    font-family:'Sen';
+    font-weight:700;
+    font-size:2rem;
+  }
+  .reset{
+    display:block;
+    margin-top:1vw;
+    text-align:center;
+    color:white;
+    font-family:'Sen';
+    font-weight:400;
+    font-size:1.25rem;
+  }
+  form{
+    display:flex;
+    flex-direction:column;
+  }
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2vw;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 1vw; /* Add some spacing between label and input */
+}
+
+  
+  @media (max-width: 1300px) and (orientation: landscape) {
+      input{
+          height: 5vw;
+      }
     }
-    .box{
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-    
-        align-items: center;
-    }
-    
-    .t1{
-        color:white;
-        font-family:'Open Sans';
-        font-weight:400;
-        font-size:2vw;
-        margin:0;
-        margin-bottom: .1vw;
-    }
-    .t2{
-        color:white;
-        font-family:'Open Sans';
-        font-weight:400;
-        font-size:1.25vw;
-        margin:0;
-        margin-bottom: .1vw;
-    }
-    .t3{
-        color:white;
-        font-family:'Open Sans';
-        font-weight:400;
-        font-size:.75vw;
-        margin:0;
-        margin-bottom:.5vw;
-    }
-    .send {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 60%;
-        margin: 0 auto;
-        margin-top: 1vw;
-        height: 5vw;
-        border: 0;
-        border-radius: .5vw;
+  @media (orientation:portrait){
+      .header{
+          display: none;
       }
-      .sendtext{
-        color: black;
-        font-family: 'Open Sans';
-        font-weight: 400;
-        font-size: 2.5vw;
-        
+      .mobile-header{
+          display: flex;
+          justify-content: space-between;
       }
-      .send:hover{
-        opacity: 0.8;
+      .register-text{
+          font-family: 'Chakra Petch';
+          font-size: 4rem;
+          padding: 5vw;
+          color: #BCB7F3;
+          displaY:inline;
+          white-space:nowrap;
+          margin:0;
+          padding:0;
+          text-decoration:underline;
       }
-      .verify {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 40%;
-        margin: 0 auto;
-        margin-top: .5vw;
-        height: 2.5vw;
-        border: 0;
-        border-radius: .5vw;
+      img{
+          width: 40vw;
+          box-sizing: content-box;
+          padding: 5vw;
       }
-      .verifytext{
-        color: black;
-        font-family: 'Open Sans';
-        font-weight: 400;
-        font-size: 1.5vw;
-        
+      input{
+          height: 12.5vw;
+          width: 80vw;
+          border-radius: 1.5vw;
+          padding-left: 3vw;
+          font-size: 3.5rem;
       }
-      .verify:hover{
-        opacity: 0.8;
-      }
-      .searchTermtext{
-        color: white;
-        font-size: 1.5vw;
-        font-family: 'Open Sans';
-        font-weight: 400;
-        margin-top: 2vw;
-        text-align: center;
-      }
-      .passwordtext{
-        color: white;
-        font-size: 1.5vw;
-        font-family: 'Open Sans';
-        font-weight: 400;
-        margin-top: 0vw;
-        text-align: center;
-      }
-      .searchTerm{
-        background-color: black;
-        color: white;
-        border: .15vw solid white;
-        border-radius: .25vw;
-        width: 100%;
-        height: 3vw;
-        font-size: 1vw;
-        font-family: 'Open Sans';
-        font-weight: 400;
-        margin: 0;
-        padding: 0;
-        padding-left: 2.5%;
-        margin-bottom: 1vw;
-        outline-color: white;
-        box-sizing: border-box;
-        
-      }
-      .newpassword{
-        background-color: black;
-        color: white;
-        border: .15vw solid white;
-        border-radius: .25vw;
-        width: 100%;
-        height: 3vw;
-        font-size: 1vw;
-        font-family: 'Open Sans';
-        font-weight: 400;
-        margin: 0;
-        padding: 0;
-        padding-left: 2.5%;
-        margin-bottom: 1vw;
-        outline-color: white;
-        box-sizing: border-box;
-      }
-      @media (orientation: portrait){
-        .t1{
-          font-size: 8vw;
-          width: 90vw;
-        }
-        .t2{
-          font-size: 5vw;
-        }
-        .t3{
-          font-size: 3vw;
-          margin-bottom: 2vw;
-        }
-        .searchTerm{
-          height: 10vw;
-          font-size: 5vw;
-        }
-        .send{
-          width: 50vw;
-          height: 10vw;
-          background-color: white;
-        }
-        .sendtext{
-          font-size: 5vw;
-        }
-        .searchTermtext{
-          font-size: 5vw;
+      .input-label {
+          font-size: 2rem;
           margin-top: 5vw;
-        }
-        .newpassword{
-          height: 10vw;
-          font-size: 5vw;
-        }
-        .passwordtext{
-          font-size: 5vw;
-          margin-top: 2vw;
-        }
-        .verify{
-          height: 10vw;
-          width: 50vw;
-          background-color:white;
-        }
-        .verifytext{
-          font-size: 5vw;
-        }
+          margin-bottom: 1vw;
       }
-    `
-    const [sent, setSent] = useState()
-    const [value, setValue] = useState()
-    function sendCode(e){
-        e.preventDefault()
-        setValue(e.target.elements.searchTerm.value)
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/sendforgot`,{email:e.target.elements.searchTerm.value})
-        .then((res)=>{
-            setSent(true)
-        })
+      .top{
+          margin-top: 3vw;
+      }
+      .already{
+          display: block;
+          font-family: "Sen";
+          font-weight: 500;
+          color: #89CED8;
+          padding: .5vw;
+          margin-top: 25vw;
+      }
+      .underline {
+          text-decoration: underline;
+          font-weight: 800;
+      }
+      .register {
+          margin-top: 10vw;
+          font-size: 4rem;
+          padding: 2vw 5vw;
+          border: black solid 0.75vw;
+          border-radius: 3vw;
+          filter: drop-shadow(-1vw 1.5vw 1.5vw rgba(0, 0, 0, .25));
+      }
+      .please{
+        margin-top:15vw;
+        font-size:3rem;
+        text-align:center;
+        width:90vw;
+        margin:15vw auto 5vw;
+      }
+      .reset{
+        font-size:2rem;
+      }
+      .leftarrow{
+        height:5vw;
+        displaY:inline;
+        width:5vw;
+        box-sizing:content-box;
+        padding:0;
+        margin:0;
+      }
+      .ok{
+        display:flex;
+        justify-content:left;
+        align-items:center;
+        margin-bottom:3vw;
+      }
+      .form-container {
+        align-items: center;
     }
-    function handleChange(event){
-        let valuee = event.target.value;
     
-        // Remove non-numeric and non-decimal characters
-        valuee = valuee.replace(/[^0-9.]/g, '');       
-        // Remove decimal points
-        // Limit the number of digits to 6
-        valuee = valuee.slice(0, 6);
-        valuee = valuee.replace(/(\.*)\./g, '$1');        
-        // Update the input value
-        event.target.value = valuee;
+    .input-container {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2vw;
     }
-
-    function verifyCode(e){
-        e.preventDefault()
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/verifyforgot`,{email:value,newpassword:e.target.elements.newpassword.value,code:e.target.elements.searchTerm.value})
-        .then((res)=>{
-            alert("Password has changed if the code is correct.")
-            login()
-        })
+    
+    .input-wrapper {
+        align-items: center;
+        margin-right: 0;
+        margin-bottom: 2vw;
     }
-
-    function login(){
-        window.location.href = "/login"
+    .input-label {
+      text-align: left; /* Align the label text to the left */
+      align-self: flex-start; /* Align the label to the left */
+      padding-left:1vw;
+  }
+  
+    .register {
+        margin-top: 1vw;
     }
+  }
+    `
+  function reset(e){
+    const auth = getAuth()
+    sendPasswordResetEmail(auth,e.target.elements.email.value)
+    .then(()=>{
+      window.location.href ='/resetSent'
+    })
+    .catch((error)=>{
+      console.log("error")
+      alert("Email failed, try again")
+    })
+  }
 
     return(
-        <div className='box'>
+        <div className='registerpage'>
             <style>
                 {css}
             </style>
-            <p className="t1">Enter Your Account's Email Address</p>
-            <p className="t2">(Verification will be done using phone number)</p>
-            <p className="t3">*sms rates may apply</p>
-            <form onSubmit={sendCode}>
-                <input disabled={sent} className = "searchTerm" id="searchTerm" type="email" title="searchTerm" placeholder="example@example.com"  required/><br />
-                <button disabled={sent} className='send' type="submit"> <span className='sendtext'>Send Code</span></button>
-            </form>
-            <div>
-                
-                <form onSubmit={verifyCode}>
-                    <h2 className="searchTermtext">Enter The Code You Received</h2>
-                    <input className = "searchTerm" id="searchTerm"  onInput={handleChange} type="number" title="searchTerm" placeholder="123456"  required/><br />
-                    <h2 className="passwordtext">And the new Password</h2>
-                    <input className = "newpassword" id="newpassword"  type="password" title="newpassword" placeholder="Password"  required/><br />
-                    <button type="submit" className='verify'><span className='verifytext'>Reset Password</span></button>
-                </form>
+            <div className="header">
+                <img src={logo}/>
+                <nav>
+                    <a href="/login" className="login-href">Login</a>
+                    <a href="/register" className="register-href">Register</a>
+                    <a href="/forgot" className="reset-href">Reset Password</a>
+                </nav>
             </div>
+            <div className="mobile-header">
+              <div className="ok">
+                <img src={leftarrow} className="leftarrow"/>
+                <a href="/login" className="register-text">back to login</a>
+              </div>
+                <img src={logo} />
+            </div>
+            <div className="full-page-container">
+              <form onSubmit={reset} className="form-container">
+                  <span className="please">Please enter the Email Address you used to register.</span>
+                  <span className="reset">You will receive an email with a reset link.</span>
+                  
+                  <div className="input-container">
+                      <div className="input-wrapper">
+                          <span className="input-label">Email</span>
+                          <input placeholder="enter email" type="email" className="email" id="email"/>
+                      </div>
+                      <button className="register" type="submit">enter</button>
+                  </div>
+              </form>
+          </div>
         </div>
+
     )
 }
 export default Forgot;
