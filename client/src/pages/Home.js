@@ -49,7 +49,6 @@ function Home(){
       }
       else if(!email){
         auth.onAuthStateChanged((user)=>{
-            console.log("change")
           if(!user){
             window.location.href ='/login' 
           }

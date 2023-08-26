@@ -73,7 +73,7 @@ app.post("/verifycode", async(req,res)=>{
     }})
     if(stat.data.status==="approved"){
       res.status(200).send("verified")
-      await User.findOneAndUpdate({email:req.body.email},{phoneNumber:req.body.phone,phoneVerified:true,remainingUses:5})
+      await User.findOneAndUpdate({email:req.body.email},{phoneNumber:req.body.phone,phoneVerified:true,$inc:{remainingUses:5}})
     }
     else{
       res.status(200).send("fail")
