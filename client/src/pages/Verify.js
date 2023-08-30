@@ -489,7 +489,7 @@ function Verify(){
                                 <img className="mmhomeicon" src={home}/>
                                 <span className="mmhometext">Home</span>
                             </div>
-                            <div onClick={()=>window.location.href='/tutorial'} className="mmtutorial">
+                            <div onClick={()=>window.location.href='https://youtu.be/PRR1eYIUzlU'} className="mmtutorial">
                                 <img className="mmtutorialicon" src={tutorial}/>
                                 <span className="mmtutorialtext">Tutorial</span>
                             </div>
@@ -530,7 +530,7 @@ function Verify(){
               <div className="three">
                   <nav>
                   <img alt="" onClick={()=>window.location.href='/'} src={home} className="home" /><a href="/" className="home-href">Home</a>
-                      <img alt=""  src={tutorial} className="tutorial" onClick={()=>window.location.href='/tutorial'} /><a href="/tutorial" className="tutorial-href">Tutorial</a>
+                      <img alt=""  src={tutorial} className="tutorial" onClick={()=>window.location.href='https://youtu.be/PRR1eYIUzlU'} /><a href="https://youtu.be/PRR1eYIUzlU" className="tutorial-href">Tutorial</a>
                       <img alt="" src={logout} className="signout" onClick={()=>window.location.href='/signout'} /><a href="/signout" className="logout-href">Logout</a>
                   </nav>
               </div>  

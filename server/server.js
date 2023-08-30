@@ -134,7 +134,7 @@ app.post("/createUser" , async (req,res)=>{
   const customer = await stripe.customers.create();
   const newUser = new User({
     email: req.body.email,
-    remainingUses: 0,
+    remainingUses: 1,
     phoneVerified: false,
     phoneNumber: "",
     customerId: customer.id,
