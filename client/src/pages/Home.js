@@ -588,6 +588,22 @@ function Home(){
     color: #89CED8;
     margin-left:.5vw;
   }
+  .bottommargintext{
+    text-align:center;
+    color:white;
+    font-family:'Sen';
+    font-size:1.5rem;
+  }
+  .bottommargin{
+    width:100vw;
+    display:flex;
+    justify-content:center;
+    margin-top:5vw;
+    margin-bottom:3vw;
+  }
+  .bottomatag{
+    color:white;
+  }
   @media (orientation:landscape){
       .currentarrow{
           display: none;
@@ -603,6 +619,10 @@ function Home(){
       }
   }
   @media (orientation:portrait) {
+      .bottommargintext{
+        font-size:3rem;
+        margin-bottom:5vw;
+      }
       .header{
           display: none;
       }
@@ -993,10 +1013,11 @@ function Home(){
                     </div>
                   ):null}
               </div>
-              <div className="mobilemarginbottom">
-
-              </div>
+              
           </div>
+            <div className="bottommargin">
+                <span className="bottommargintext">Contact Us: <a className="bottomatag" href="mailto:support@localemail.app">support@localemail.app</a></span>
+            </div>
         </div>
     )
 }
