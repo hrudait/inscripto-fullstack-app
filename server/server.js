@@ -131,6 +131,9 @@ app.post("/verifyforgot", async(req,res)=>{
 })
 
 app.post("/createUser" , async (req,res)=>{
+  if(User.exists({email:req.body.email})){
+    return res.send("fail")
+  }
   const customer = await stripe.customers.create();
   const newUser = new User({
     username:req.body.username,
