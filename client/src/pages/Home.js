@@ -21,6 +21,7 @@ import tutorial from '../images/Tutorial.svg'
 import wallet from '../images/wallet.svg'
 import menuToggle from '../images/mmtoggle.svg'
 import {auth} from './firebase'
+import { updateProfile } from "firebase/auth";
 
 function Home(){
     const [credits, setcredits] = useState();
@@ -63,9 +64,10 @@ function Home(){
     //get users credits
     function getCredits(){
       axios.post(`${process.env.REACT_APP_BACKEND_URL}/getUser`,{email:email})
-      .then((res)=>{
+      .then(async (res)=>{
           setcredits(res.data.credits)
           setVerified(res.data.phoneVerified)
+          await updateProfile(auth.currentUser,{displayName:res.data.username})
       })
     }
 

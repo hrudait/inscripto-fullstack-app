@@ -8,15 +8,11 @@ function Register(){
           window.location.href ='/'
         }
       })
-    function submit(e) {
+    async function submit(e) {
         e.preventDefault()
         if(e.target.elements.password.value===e.target.elements.repeatpassword.value){
+          await axios.post(`${process.env.REACT_APP_BACKEND_URL}/createUser`,{email:e.target.elements.email.value,username:e.target.elements.username.value})
           createUserWithEmailAndPassword(auth, e.target.elements.email.value,e.target.elements.password.value)
-          .then(async ()=>{
-            await axios.post(`${process.env.REACT_APP_BACKEND_URL}/createUser`,{email:e.target.elements.email.value})
-            await updateProfile(auth.currentUser,{displayName:e.target.elements.username.value})
-            window.location.href='/login'
-          })
           .catch((error)=>{
             alert("Error with email or password, try again")
           })

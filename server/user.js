@@ -8,6 +8,7 @@ const user = new mongoose.Schema({
     customerId:String,
     currentcsvs:[String],
     pastcsvs:[String],
+    username:String,
 },{collection:'userlogins'})
 
 module.exports = mongoose.model('User',user)

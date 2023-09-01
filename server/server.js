@@ -133,6 +133,7 @@ app.post("/verifyforgot", async(req,res)=>{
 app.post("/createUser" , async (req,res)=>{
   const customer = await stripe.customers.create();
   const newUser = new User({
+    username:req.body.username,
     email: req.body.email,
     remainingUses: 1,
     phoneVerified: false,
@@ -151,7 +152,7 @@ app.post('/getUser', async(req,res)=>{
   if(!user){
     return res.status(400)
   }
-  return res.send({credits:user.remainingUses,phoneVerified:user.phoneVerified,customerId:user.customerId})
+  return res.send({credits:user.remainingUses,phoneVerified:user.phoneVerified,username:user.username,customerId:user.customerId})
 })
 
 app.post('/getCurrentCsvAmount', async(req,res)=>{
