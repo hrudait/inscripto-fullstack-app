@@ -12,6 +12,7 @@ function Register(){
         e.preventDefault()
         if(e.target.elements.password.value===e.target.elements.repeatpassword.value){
           await axios.post(`${process.env.REACT_APP_BACKEND_URL}/createUser`,{email:e.target.elements.email.value,username:e.target.elements.username.value})
+          console.log("bruh")
           createUserWithEmailAndPassword(auth, e.target.elements.email.value,e.target.elements.password.value)
           .catch((error)=>{
             alert("Error with email or password, try again")
