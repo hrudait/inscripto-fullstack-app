@@ -75,6 +75,7 @@ function Home(){
 
 
     function submite(e){
+        e.preventDefault()
         if(credits===0){
             alert("Not enough credits, please reload")
         }
