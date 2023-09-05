@@ -209,10 +209,22 @@ app.post("/getFinished", async(req,res)=>{
 let connection;
 let channel;
 //connect to the queue
-async function setupRabbitMQ(){
-  connection = await connect("amqp://admin:password@66.29.131.229:5672")
-  channel = await connection.createChannel()
-  await channel.assertQueue('tasks',{durable:true,arguments:{'x-queue-type':'classic'}})
+async function setupRabbitMQ() {
+  try {
+    connection = await connect("amqp://admin:password@66.29.131.229:5672");
+    connection.on("error", (err) => {
+      console.error("RabbitMQ connection error:", err.message);
+      // Attempt to reconnect after a delay
+      setTimeout(setupRabbitMQ, 5000); // Reconnect after 5 seconds
+    });
+
+    channel = await connection.createChannel();
+    await channel.assertQueue('tasks', { durable: true, arguments: { 'x-queue-type': 'classic' } });
+  } catch (err) {
+    console.error("Error setting up RabbitMQ:", err.message);
+    // Attempt to reconnect after a delay
+    setTimeout(setupRabbitMQ, 5000); // Reconnect after 5 seconds
+  }
 }
 
 setupRabbitMQ()
@@ -241,16 +253,18 @@ app.post('/run', async (req,res)=>{
       { email: req.body.email }, 
       { $push: { currentcsvs: id },remainingUses:doc.remainingUses-1}
     );
-    try{
-      console.log("sending to queue")
-      const queueItem = url+"12%%2552%%12"+id+"12%%2552%%12"+req.body.email
-      await channel.sendToQueue('tasks',Buffer.from(queueItem))
-      console.log("sent to queue")
-    }catch{
-      console.log("ok")
-      return res.send("ok")
+    while(true){
+      try{
+        console.log("sending to queue")
+        const queueItem = url+"12%%2552%%12"+id+"12%%2552%%12"+req.body.email
+        await channel.sendToQueue('tasks',Buffer.from(queueItem))
+        console.log("sent to queue")
+        return res.send("worked")
+      }
+      catch{
+        console.log('failed')
+      }
     }
-    return res.send("ok")
   }
   //ok so this so far takes in a location string and searchTerm then converts it to the url to send to aws. It creates the csv document and adds the id of the csv to the 
   //User's array of csv ids
