@@ -261,7 +261,8 @@ app.post('/run', async (req,res)=>{
         console.log("sent to queue")
         return res.send("worked")
       }
-      catch{
+      catch(e){
+        console.log(e)
         console.log('failed')
       }
     }
