@@ -8,7 +8,7 @@ const bodyParser = require('body-parser')
 const User = require('./user');
 const csv = require('./csv');
 const app = express();
-const stripe = require('stripe')('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')
+const stripe = require('stripe')('redacted')
 const qs = require('qs')
 const {connect} = require('amqplib')
 
@@ -18,7 +18,7 @@ app.listen(port)
 connectDB()
 
 async function connectDB(){
-  await mongoose.connect('mongodb+srv://resources:Hellome$1@umanagement.ufypp4w.mongodb.net/useraccess?retryWrites=true&w=majority',{
+  await mongoose.connect('redacted',{
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-  origin: ['https://front-qqki.onrender.com','https://app.localemail.app','https://app.inscripto.app'],
+  origin: ['redacted'],
   optionsSuccessStatus: 200,
   credentials: true
 }));
@@ -52,9 +52,9 @@ app.post("/sendverify", async(req,res)=>{
     return res.status(200).send("al")
   }
   try{
-    await axios.post("https://verify.twilio.com/v2/Services/VA1f7341b36346d0225b05a3976ddb0370/Verifications",qs.stringify({'To': req.body.phone, 'Channel': 'sms'}),{auth: {
-      username: "ACc9f7abb0037099391fff3a262b15e17c",
-      password: "f4dadbc5b7b908c4e7434dd69d7d259f"
+    await axios.post("redacted",qs.stringify({'To': req.body.phone, 'Channel': 'sms'}),{auth: {
+      username: "redacted",
+      password: "redacted"
     }})
   }
   catch(e){
@@ -67,9 +67,9 @@ app.post("/sendverify", async(req,res)=>{
 app.post("/verifycode", async(req,res)=>{
   try{
     
-    const stat = await axios.post("https://verify.twilio.com/v2/Services/VA1f7341b36346d0225b05a3976ddb0370/VerificationCheck",qs.stringify({'To': req.body.phone, 'Code': req.body.code}),{auth: {
-      username: "ACc9f7abb0037099391fff3a262b15e17c",
-      password: "f4dadbc5b7b908c4e7434dd69d7d259f"
+    const stat = await axios.post("redacted",qs.stringify({'To': req.body.phone, 'Code': req.body.code}),{auth: {
+      username: "redacted",
+      password: "redacted"
     }})
     if(stat.data.status==="approved"){
       res.status(200).send("verified")
@@ -91,9 +91,9 @@ app.post("/sendforgot", async(req,res)=>{
   if(check){ 
     const user = await User.findOne({email:email})
     try{
-      await axios.post("https://verify.twilio.com/v2/Services/VA1f7341b36346d0225b05a3976ddb0370/Verifications",qs.stringify({'To': user.phoneNumber, 'Channel': 'sms'}),{auth: {
-        username: "ACc9f7abb0037099391fff3a262b15e17c",
-        password: "f4dadbc5b7b908c4e7434dd69d7d259f"
+      await axios.post("redacted",qs.stringify({'To': user.phoneNumber, 'Channel': 'sms'}),{auth: {
+        username: "redacted",
+        password: "redacted"
       }})
     }
     catch(e){
@@ -112,9 +112,9 @@ app.post("/verifyforgot", async(req,res)=>{
   if(check){
     const user = await User.findOne({email:email})
     try{  
-      const stat = await axios.post("https://verify.twilio.com/v2/Services/VA1f7341b36346d0225b05a3976ddb0370/VerificationCheck",qs.stringify({'To': user.phoneNumber, 'Code': req.body.code}),{auth: {
-        username: "ACc9f7abb0037099391fff3a262b15e17c",
-        password: "f4dadbc5b7b908c4e7434dd69d7d259f"
+      const stat = await axios.post("redacted",qs.stringify({'To': user.phoneNumber, 'Code': req.body.code}),{auth: {
+        username: "redacted",
+        password: "redacted"
       }})
       if(stat.data.status==="approved"){
         await User.findOneAndUpdate({email:email},{password:await bcrypt.hash(req.body.newpassword,10)})
@@ -211,7 +211,7 @@ let channel;
 //connect to the queue
 async function setupRabbitMQ() {
   try {
-    connection = await connect("amqp://admin:password@66.29.131.229:5672");
+    connection = await connect("redacted");
     connection.on("error", (err) => {
       console.error("RabbitMQ connection error:", err.message);
       // Attempt to reconnect after a delay
@@ -343,7 +343,7 @@ app.post('/checkout',async (req,res)=>{
 })
 
 
-const endpointSecret = "whsec_JHFWtgLGjm5NlLGEeiipXvl6Tghc89mF";
+const endpointSecret = "redacted";
 
 app.post('/webhook', bodyParser.raw({type: 'application/json'}), async (request, response) => {
   let event;
